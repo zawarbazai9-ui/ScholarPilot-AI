@@ -1,32 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Search,
-  Loader2,
-  Plus,
-  Check,
-  ExternalLink,
-  Sparkles,
-  AlertCircle,
-  GraduationCap,
-  Globe,
-  BookOpen,
-} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
 
 type FoundScholarship = {
   title: string;
@@ -117,183 +92,187 @@ export function ScholarshipFinder({ session, onAdded }: { session?: { access_tok
   return (
     <div className="space-y-6">
       {/* Search form */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div>
-              <CardTitle className="text-lg">AI Scholarship Finder</CardTitle>
-              <CardDescription>
-                Describe what you&apos;re looking for and AI will find matching scholarships.
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <p className="text-headline-md font-headline-md text-on-surface mb-lg flex items-center gap-2">
+          <span className="p-2 bg-secondary-container rounded-lg">
+            <span className="material-symbols-outlined text-on-secondary-container text-[20px]">auto_awesome</span>
+          </span>
+          AI Scholarship Finder
+        </p>
+        <p className="text-body-sm text-on-surface-variant/80 mb-lg">
+          Describe what you&apos;re looking for and AI will find matching scholarships.
+        </p>
+        <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label className="flex items-center gap-1.5">
-                <BookOpen className="h-3.5 w-3.5" />
+              <label className="flex items-center gap-1.5 text-sm font-medium text-on-surface">
+                <span className="material-symbols-outlined text-[14px]">menu_book</span>
                 Field of study
-              </Label>
-              <Select value={field} onValueChange={setField}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Any field" />
-                </SelectTrigger>
-                <SelectContent>
-                  {FIELDS.map((f) => (
-                    <SelectItem key={f} value={f}>{f}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              </label>
+              <select
+                value={field}
+                onChange={(e) => setField(e.target.value)}
+                className="flex h-10 w-full rounded-xl border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm text-on-surface ring-offset-background placeholder:text-on-surface-variant/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <option value="">Any field</option>
+                {FIELDS.map((f) => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
             </div>
             <div className="space-y-2">
-              <Label className="flex items-center gap-1.5">
-                <Globe className="h-3.5 w-3.5" />
+              <label className="flex items-center gap-1.5 text-sm font-medium text-on-surface">
+                <span className="material-symbols-outlined text-[14px]">public</span>
                 Country
-              </Label>
-              <Select value={country} onValueChange={setCountry}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Any country" />
-                </SelectTrigger>
-                <SelectContent>
-                  {COUNTRIES.map((c) => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              </label>
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="flex h-10 w-full rounded-xl border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm text-on-surface ring-offset-background placeholder:text-on-surface-variant/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <option value="">Any country</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
             <div className="space-y-2">
-              <Label className="flex items-center gap-1.5">
-                <GraduationCap className="h-3.5 w-3.5" />
+              <label className="flex items-center gap-1.5 text-sm font-medium text-on-surface">
+                <span className="material-symbols-outlined text-[14px]">school</span>
                 Degree level
-              </Label>
-              <Select value={degree} onValueChange={setDegree}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Any level" />
-                </SelectTrigger>
-                <SelectContent>
-                  {DEGREES.map((d) => (
-                    <SelectItem key={d} value={d}>{d}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              </label>
+              <select
+                value={degree}
+                onChange={(e) => setDegree(e.target.value)}
+                className="flex h-10 w-full rounded-xl border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm text-on-surface ring-offset-background placeholder:text-on-surface-variant/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <option value="">Any level</option>
+                {DEGREES.map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
             </div>
           </div>
-          <Button onClick={handleSearch} disabled={searching || (!field && !country && !degree)}>
+          <button
+            onClick={handleSearch}
+            disabled={searching || (!field && !country && !degree)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl font-bold text-sm transition-all hover:opacity-90 shadow-sm active:scale-95 disabled:opacity-50"
+          >
             {searching ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
             ) : (
-              <Search className="mr-2 h-4 w-4" />
+              <span className="material-symbols-outlined text-[18px]">search</span>
             )}
             {searching ? 'Searching...' : 'Find scholarships'}
-          </Button>
-        </CardContent>
-      </Card>
+          </button>
+        </div>
+      </div>
 
       {/* Loading */}
       {searching && (
         <div className="grid gap-4 sm:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i}>
-              <CardContent className="p-4 space-y-3">
-                <Skeleton className="h-5 w-48" />
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-10 w-full" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-8 w-24 rounded-md" />
-                  <Skeleton className="h-8 w-20 rounded-md" />
-                </div>
-              </CardContent>
-            </Card>
+            <div key={i} className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30 space-y-3">
+              <div className="h-5 w-48 bg-surface-container-high rounded animate-pulse" />
+              <div className="h-4 w-32 bg-surface-container-high rounded animate-pulse" />
+              <div className="h-10 w-full bg-surface-container-high rounded animate-pulse" />
+              <div className="flex gap-2">
+                <div className="h-8 w-24 bg-surface-container-high rounded animate-pulse" />
+                <div className="h-8 w-20 bg-surface-container-high rounded animate-pulse" />
+              </div>
+            </div>
           ))}
         </div>
       )}
 
       {/* Error */}
       {error && (
-        <Card className="border-destructive/30 bg-destructive/5">
-          <CardContent className="flex items-start gap-3 py-4">
-            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+        <div className="bg-error-container/20 border border-error/10 p-xl rounded-2xl">
+          <div className="flex items-start gap-3">
+            <span className="material-symbols-outlined text-[20px] mt-0.5 shrink-0 text-error">error</span>
             <div>
-              <p className="text-sm font-medium text-destructive">Search failed</p>
-              <p className="mt-1 text-xs text-muted-foreground">{error}</p>
+              <p className="text-sm font-medium text-error">Search failed</p>
+              <p className="mt-1 text-xs text-on-surface-variant">{error}</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Results */}
       {results.length > 0 && (
         <div className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            Found <span className="font-medium text-foreground">{results.length}</span> scholarships.
+          <p className="text-sm text-on-surface-variant">
+            Found <span className="font-medium text-on-surface">{results.length}</span> scholarships.
             Review and add them to your database.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             {results.map((s, i) => {
               const isAdded = addedIds.has(i);
               return (
-                <Card key={i} className={isAdded ? 'border-emerald-200 bg-emerald-50/50 dark:border-emerald-500/20' : ''}>
-                  <CardContent className="p-4 space-y-2.5">
+                <div
+                  key={i}
+                  className={`bg-surface-container-lowest p-xl rounded-2xl shadow-sm border ${isAdded ? 'border-success/30 bg-success/10' : 'border-outline-variant/30'}`}
+                >
+                  <div className="space-y-2.5">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-semibold text-sm leading-tight">{s.title}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">
+                        <p className="font-semibold text-sm leading-tight text-on-surface">{s.title}</p>
+                        <p className="mt-0.5 text-xs text-on-surface-variant">
                           {s.university} · {s.country}
                         </p>
                       </div>
                       {isAdded ? (
-                        <Badge className="shrink-0 bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                          <Check className="mr-1 h-3 w-3" />
+                        <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-300 px-2.5 py-1 text-xs font-medium">
+                          <span className="material-symbols-outlined text-[12px]">check</span>
                           Added
-                        </Badge>
+                        </span>
                       ) : (
                         <div className="flex shrink-0 gap-1.5">
                           {s.degree && (
-                            <Badge variant="secondary" className="text-[10px]">{s.degree}</Badge>
+                            <span className="rounded-full bg-surface-container-high px-2 py-0.5 text-[10px] font-medium text-on-surface-variant">{s.degree}</span>
                           )}
-                          <Badge variant="outline" className="text-[10px]">{s.funding}</Badge>
+                          <span className="rounded-full bg-secondary-container px-2 py-0.5 text-[10px] font-medium text-on-secondary-container">{s.funding}</span>
                         </div>
                       )}
                     </div>
-                    <p className="line-clamp-2 text-xs text-muted-foreground">{s.description}</p>
+                    <p className="line-clamp-2 text-xs text-on-surface-variant">{s.description}</p>
                     {s.requirements && (
-                      <p className="line-clamp-1 text-[11px] text-muted-foreground italic">
+                      <p className="line-clamp-1 text-[11px] text-on-surface-variant/70 italic">
                         Req: {s.requirements}
                       </p>
                     )}
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-[11px] text-on-surface-variant">
                       Deadline: <span className="font-medium">{s.deadline}</span>
                     </p>
                     <div className="flex gap-2 pt-1">
                       {!isAdded && (
-                        <Button
-                          size="sm"
+                        <button
                           disabled={addingId === i}
                           onClick={() => handleAdd(s, i)}
+                          className="flex items-center gap-1.5 px-4 py-2 bg-primary text-on-primary rounded-xl font-bold text-xs transition-all hover:opacity-90 active:scale-95 disabled:opacity-50"
                         >
                           {addingId === i ? (
-                            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                            <span className="material-symbols-outlined text-[14px] animate-spin">progress_activity</span>
                           ) : (
-                            <Plus className="mr-1.5 h-3.5 w-3.5" />
+                            <span className="material-symbols-outlined text-[14px]">add</span>
                           )}
                           Add to database
-                        </Button>
+                        </button>
                       )}
                       {s.official_link && (
-                        <Button asChild size="sm" variant="ghost">
-                          <a href={s.official_link} target="_blank" rel="noopener noreferrer">
-                            Visit
-                            <ExternalLink className="ml-1 h-3 w-3" />
-                          </a>
-                        </Button>
+                        <a
+                          href={s.official_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-2 text-xs font-medium text-on-surface-variant hover:text-primary rounded-xl transition-colors"
+                        >
+                          Visit
+                          <span className="material-symbols-outlined text-[12px]">open_in_new</span>
+                        </a>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               );
             })}
           </div>

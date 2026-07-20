@@ -2,15 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import {
-  Loader2,
-  ClipboardList,
-  ArrowRight,
-  Plus,
-  Trash2,
-  ExternalLink,
-  Save,
-} from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -25,10 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -56,11 +43,12 @@ import {
 } from '@/lib/db';
 import { APPLICATION_STATUSES, type ApplicationStatus, type ApplicationUpdate } from '@/lib/types';
 import type { Application, Scholarship, SavedScholarship } from '@/lib/types';
+import { notifyApplicationStatusChanged } from '@/lib/notify';
 
 type AppWithScholarship = Application & { scholarship: Scholarship };
 
 const STATUS_LABELS: Record<ApplicationStatus, string> = {
-  not_started: 'Not started',
+  not_started: 'Not Started',
   researching: 'Researching',
   drafting: 'Drafting',
   submitted: 'Submitted',
@@ -77,12 +65,12 @@ const STATUS_PROGRESS: Record<ApplicationStatus, number> = {
   rejected: 100,
 };
 
-const STATUS_ORDER: ApplicationStatus[] = [
-  'researching',
-  'drafting',
-  'submitted',
-  'awarded',
-  'rejected',
+const KANBAN_COLUMNS = [
+  { label: 'Not Started', dotColor: 'bg-on-surface-variant', statuses: ['not_started'] as ApplicationStatus[] },
+  { label: 'Preparing', dotColor: 'bg-secondary-container', statuses: ['researching', 'drafting'] as ApplicationStatus[] },
+  { label: 'Submitted', dotColor: 'bg-tertiary-container', statuses: ['submitted'] as ApplicationStatus[] },
+  { label: 'Accepted', dotColor: 'bg-success', statuses: ['awarded'] as ApplicationStatus[] },
+  { label: 'Rejected', dotColor: 'bg-error', statuses: ['rejected'] as ApplicationStatus[] },
 ];
 
 export default function ApplicationsPage() {
@@ -93,6 +81,7 @@ export default function ApplicationsPage() {
   const [editing, setEditing] = useState<AppWithScholarship | null>(null);
   const [view, setView] = useState<'board' | 'list'>('board');
   const [addOpen, setAddOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const load = async () => {
     if (!user) return;
@@ -115,6 +104,17 @@ export default function ApplicationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  const filtered = useMemo(() => {
+    if (!searchQuery.trim()) return applications;
+    const q = searchQuery.toLowerCase();
+    return applications.filter(
+      (a) =>
+        a.scholarship.title.toLowerCase().includes(q) ||
+        a.scholarship.university?.toLowerCase().includes(q) ||
+        a.scholarship.funding?.toLowerCase().includes(q)
+    );
+  }, [applications, searchQuery]);
+
   const grouped = useMemo(() => {
     const map: Record<ApplicationStatus, AppWithScholarship[]> = {
       not_started: [],
@@ -124,11 +124,11 @@ export default function ApplicationsPage() {
       awarded: [],
       rejected: [],
     };
-    applications.forEach((a) => {
+    filtered.forEach((a) => {
       map[a.status as ApplicationStatus]?.push(a);
     });
     return map;
-  }, [applications]);
+  }, [filtered]);
 
   const stats = useMemo(
     () => ({
@@ -145,11 +145,21 @@ export default function ApplicationsPage() {
 
   const handleUpdate = async (id: string, patch: ApplicationUpdate) => {
     try {
+      const oldApp = applications.find((a) => a.id === id);
       const updated = await updateApplication(id, patch);
       if (updated) {
         const u = updated as AppWithScholarship;
         setApplications((prev) => prev.map((a) => (a.id === id ? u : a)));
         setEditing(u);
+        if (user && oldApp && patch.status && patch.status !== oldApp.status) {
+          notifyApplicationStatusChanged(
+            user.id,
+            oldApp.scholarship.title,
+            oldApp.status,
+            patch.status,
+            oldApp.scholarship_id
+          ).catch(() => {});
+        }
       }
     } catch (err) {
       toast({
@@ -176,126 +186,190 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-            Applications
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Track every application from research to award in one pipeline.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex rounded-md border p-0.5">
-            <button
-              onClick={() => setView('board')}
-              className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                view === 'board'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Board
-            </button>
-            <button
-              onClick={() => setView('list')}
-              className={`rounded px-3 py-1 text-xs font-medium transition-colors ${
-                view === 'list'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              List
-            </button>
+    <>
+      <div className="mx-auto max-w-6xl space-y-6">
+        <div className="flex flex-col gap-md sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-headline-md text-on-surface">Application Tracker</h1>
+            <p className="text-body-sm text-on-surface-variant mt-1">
+              Track every application from research to award in one pipeline.
+            </p>
           </div>
-          <Button onClick={() => setAddOpen(true)}>
-            <Plus className="mr-1 h-4 w-4" />
-            Track new
-          </Button>
-        </div>
-      </div>
-
-      <GmailTracker onScanComplete={load} />
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total tracked" value={String(stats.total)} />
-        <StatCard label="Active" value={String(stats.active)} tone="text-accent" />
-        <StatCard label="Submitted" value={String(stats.submitted)} tone="text-primary" />
-        <StatCard label="Awards won" value={String(stats.awarded)} tone="text-success" />
-      </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center py-20 text-muted-foreground">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          Loading applications…
-        </div>
-      ) : applications.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/20 py-16 text-center">
-          <ClipboardList className="h-10 w-10 text-muted-foreground" />
-          <p className="mt-3 font-medium">No applications tracked yet</p>
-          <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-            Start tracking from a saved scholarship, or add one here to begin
-            managing your application pipeline.
-          </p>
-          <div className="mt-4 flex gap-2">
-            <Button onClick={() => setAddOpen(true)}>
-              <Plus className="mr-1 h-4 w-4" />
-              Track a scholarship
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/scholarships">Browse scholarships</Link>
-            </Button>
-          </div>
-        </div>
-      ) : view === 'board' ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {STATUS_ORDER.filter((s) => grouped[s].length > 0).map((status) => (
-            <div key={status} className="space-y-3">
-              <div className="flex items-center gap-2">
-                <ApplicationStatusBadge status={status} />
-                <span className="text-xs text-muted-foreground">
-                  {grouped[status].length}
-                </span>
-              </div>
-              <div className="space-y-3">
-                {grouped[status].map((a) => (
-                  <ApplicationCard
-                    key={a.id}
-                    app={a}
-                    onOpen={() => setEditing(a)}
-                    onQuickStatus={(s) => handleUpdate(a.id, { status: s, progress: STATUS_PROGRESS[s] })}
-                  />
-                ))}
-              </div>
+          <div className="flex items-center gap-sm">
+            <div className="flex rounded-full bg-surface-container-high p-0.5">
+              <button
+                onClick={() => setView('board')}
+                className={`flex items-center gap-xs rounded-full px-md py-xs text-label-sm transition-colors ${
+                  view === 'board'
+                    ? 'bg-primary text-on-primary'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">view_kanban</span>
+                Board
+              </button>
+              <button
+                onClick={() => setView('list')}
+                className={`flex items-center gap-xs rounded-full px-md py-xs text-label-sm transition-colors ${
+                  view === 'list'
+                    ? 'bg-primary text-on-primary'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">view_list</span>
+                List
+              </button>
             </div>
-          ))}
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">
+                search
+              </span>
+              <input
+                type="text"
+                placeholder="Search applications..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-surface-container-low border border-outline-variant rounded-full pl-xl pr-md py-xs text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/30 w-64"
+              />
+            </div>
+            <button
+              onClick={() => setAddOpen(true)}
+              className="flex items-center gap-xs bg-primary text-on-primary rounded-full px-md py-xs text-label-md font-medium transition-opacity hover:opacity-90"
+            >
+              <span className="material-symbols-outlined text-lg">add</span>
+              New
+            </button>
+          </div>
         </div>
-      ) : (
-        <Card>
-          <CardContent className="p-0">
-            <div className="divide-y">
-              {applications.map((a) => (
+
+        <GmailTracker onScanComplete={load} />
+
+        <div className="grid gap-md grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Total Tracked" value={String(stats.total)} icon="folder" />
+          <StatCard label="Active" value={String(stats.active)} icon="pending" tone="text-secondary" />
+          <StatCard label="Submitted" value={String(stats.submitted)} icon="send" tone="text-on-tertiary-container" />
+          <StatCard label="Awards Won" value={String(stats.awarded)} icon="emoji_events" tone="text-success" />
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-on-surface-variant">
+            <span className="material-symbols-outlined animate-spin mr-sm text-xl">
+              progress_activity
+            </span>
+            Loading applications…
+          </div>
+        ) : applications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-outline-variant bg-surface-container-low py-16 text-center">
+            <span className="material-symbols-outlined text-4xl text-on-surface-variant">
+              clipboard
+            </span>
+            <p className="text-body-md font-medium text-on-surface mt-3">
+              No applications tracked yet
+            </p>
+            <p className="text-body-sm text-on-surface-variant mt-1 max-w-sm">
+              Start tracking from a saved scholarship, or add one here to begin
+              managing your application pipeline.
+            </p>
+            <div className="flex gap-sm mt-4">
+              <button
+                onClick={() => setAddOpen(true)}
+                className="flex items-center gap-xs bg-primary text-on-primary rounded-full px-md py-xs text-label-md font-medium transition-opacity hover:opacity-90"
+              >
+                <span className="material-symbols-outlined text-lg">add</span>
+                Track a scholarship
+              </button>
+              <Link
+                href="/scholarships"
+                className="flex items-center gap-xs border border-outline-variant text-on-surface rounded-full px-md py-xs text-label-md font-medium transition-colors hover:bg-surface-container-high"
+              >
+                Browse scholarships
+              </Link>
+            </div>
+          </div>
+        ) : view === 'board' ? (
+          <div className="overflow-x-auto">
+            <div className="flex gap-md min-h-[600px] pb-md">
+              {KANBAN_COLUMNS.map((col) => {
+                const colApps = col.statuses.flatMap((s) => grouped[s]);
+                return (
+                  <div
+                    key={col.label}
+                    className="kanban-column flex flex-col bg-surface-container-low rounded-xl p-md min-h-0"
+                  >
+                    <div className="flex items-center gap-sm mb-md">
+                      <span className={`w-2.5 h-2.5 rounded-full ${col.dotColor}`} />
+                      <span className="text-label-sm uppercase tracking-wider text-on-surface-variant">
+                        {col.label}
+                      </span>
+                      <span className="text-label-sm text-on-surface-variant bg-surface-container-high px-sm py-0.5 rounded-full">
+                        {colApps.length}
+                      </span>
+                      <button
+                        onClick={() => setAddOpen(true)}
+                        className="ml-auto text-on-surface-variant hover:text-on-surface transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-lg">add</span>
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-sm min-h-0">
+                      {colApps.map((a) => (
+                        <KanbanCard
+                          key={a.id}
+                          app={a}
+                          onOpen={() => setEditing(a)}
+                          onQuickStatus={(s) =>
+                            handleUpdate(a.id, { status: s, progress: STATUS_PROGRESS[s] })
+                          }
+                        />
+                      ))}
+                      {colApps.length === 0 && (
+                        <div className="text-center py-8 text-on-surface-variant/40">
+                          <span className="material-symbols-outlined text-3xl">inbox</span>
+                          <p className="text-body-sm mt-1">No applications</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm overflow-hidden">
+            <div className="divide-y divide-outline-variant/30">
+              {filtered.map((a) => (
                 <button
                   key={a.id}
                   onClick={() => setEditing(a)}
-                  className="flex w-full items-center gap-4 px-4 py-3 text-left transition-colors hover:bg-muted/40"
+                  className="flex w-full items-center gap-md px-md py-sm text-left transition-colors hover:bg-surface-container-low"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{a.scholarship.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                       {a.scholarship.university} · {a.scholarship.funding}
+                    <p className="truncate text-body-md font-medium text-on-surface">
+                      {a.scholarship.title}
+                    </p>
+                    <p className="text-body-sm text-on-surface-variant">
+                      {a.scholarship.university} · {a.scholarship.funding}
                     </p>
                   </div>
                   <DeadlinePill dateStr={a.scholarship.deadline} />
                   <ApplicationStatusBadge status={a.status} />
-                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                  <span className="material-symbols-outlined text-on-surface-variant text-lg">
+                    arrow_forward
+                  </span>
                 </button>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={() => setAddOpen(true)}
+        className="fixed bottom-lg right-lg bg-primary text-on-primary rounded-full p-lg shadow-elevated hover:shadow-xl transition-all z-50 flex items-center gap-sm"
+      >
+        <span className="material-symbols-outlined text-xl">add</span>
+        <span className="text-label-md font-medium hidden sm:inline">New Application</span>
+      </button>
 
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         {editing && (
@@ -315,22 +389,35 @@ export default function ApplicationsPage() {
           load();
         }}
       />
+    </>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  icon,
+  tone,
+}: {
+  label: string;
+  value: string;
+  icon: string;
+  tone?: string;
+}) {
+  return (
+    <div className="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30">
+      <div className="flex items-center gap-sm">
+        <span className="material-symbols-outlined text-on-surface-variant text-xl">
+          {icon}
+        </span>
+        <p className="text-body-sm text-on-surface-variant">{label}</p>
+      </div>
+      <p className={`text-headline-md text-on-surface mt-sm ${tone ?? ''}`}>{value}</p>
     </div>
   );
 }
 
-function StatCard({ label, value, tone }: { label: string; value: string; tone?: string }) {
-  return (
-    <Card>
-      <CardContent className="py-5">
-        <p className="text-sm text-muted-foreground">{label}</p>
-        <p className={`mt-1 font-display text-2xl font-bold ${tone ?? ''}`}>{value}</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function ApplicationCard({
+function KanbanCard({
   app,
   onOpen,
   onQuickStatus,
@@ -340,47 +427,72 @@ function ApplicationCard({
   onQuickStatus: (status: ApplicationStatus) => void;
 }) {
   const days = daysUntil(app.scholarship.deadline);
+
   return (
-    <Card className="cursor-pointer transition-all hover:shadow-md" onClick={onOpen}>
-      <CardContent className="space-y-3 py-4">
-        <p className="line-clamp-2 text-sm font-semibold leading-snug">
-          {app.scholarship.title}
+    <div
+      className="kanban-card bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 transition-all cursor-grab active:cursor-grabbing"
+      onClick={onOpen}
+    >
+      <div className="flex items-center justify-between mb-sm">
+        <span className="text-label-sm bg-secondary-container text-on-secondary-container px-sm py-0.5 rounded-full">
+          {app.scholarship.funding}
+        </span>
+        <DeadlinePill dateStr={app.scholarship.deadline} />
+      </div>
+
+      <p className="text-body-md font-semibold text-on-surface line-clamp-2 mb-xs leading-snug">
+        {app.scholarship.title}
+      </p>
+      <p className="text-body-sm text-on-surface-variant mb-sm">{app.scholarship.university}</p>
+
+      <div className="flex items-center justify-between text-label-sm text-on-surface-variant mb-xs">
+        <span>Progress</span>
+        <span>{app.progress}%</span>
+      </div>
+      <div className="h-1.5 bg-surface-container-high rounded-full overflow-hidden mb-sm">
+        <div
+          className="h-full bg-primary rounded-full transition-all duration-300"
+          style={{ width: `${app.progress}%` }}
+        />
+      </div>
+
+      {days >= 0 && days <= 14 && (
+        <p className="text-label-sm text-warning mb-sm">
+          {days === 0 ? 'Due today' : `${days}d left`}
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-           <Badge className="bg-primary/10 text-primary">{app.scholarship.funding}</Badge>
-          <DeadlinePill dateStr={app.scholarship.deadline} />
-        </div>
-        <div>
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>Progress</span>
-            <span>{app.progress}%</span>
-          </div>
-          <Progress value={app.progress} className="mt-1 h-1.5" />
-        </div>
-        <div className="flex items-center gap-2 pt-1">
-          <Select
-            value={app.status}
-            onValueChange={(v) => onQuickStatus(v as ApplicationStatus)}
+      )}
+
+      <div className="flex items-center justify-between pt-sm border-t border-outline-variant/20">
+        <Select
+          value={app.status}
+          onValueChange={(v) => onQuickStatus(v as ApplicationStatus)}
+        >
+          <SelectTrigger
+            className="h-7 text-xs bg-surface-container-low border-outline-variant/50 text-on-surface-variant"
+            onClick={(e) => e.stopPropagation()}
           >
-            <SelectTrigger className="h-8 text-xs" onClick={(e) => e.stopPropagation()}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {APPLICATION_STATUSES.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {STATUS_LABELS[s]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {days >= 0 && days <= 14 && (
-            <span className="ml-auto text-xs font-medium text-warning">
-              {days === 0 ? 'Due today' : `${days}d left`}
-            </span>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {APPLICATION_STATUSES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {STATUS_LABELS[s]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
+          className="text-label-sm text-primary hover:text-on-surface flex items-center gap-xs transition-colors"
+        >
+          Details
+          <span className="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -407,27 +519,28 @@ function ApplicationEditor({
   };
 
   return (
-    <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+    <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl bg-surface-container-lowest border-outline-variant/30">
       <DialogHeader>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-           {app.scholarship.university}
+        <div className="flex items-center gap-sm text-body-sm text-on-surface-variant">
+          <span className="material-symbols-outlined text-base">school</span>
+          {app.scholarship.university}
         </div>
-        <DialogTitle className="font-display text-xl">
+        <DialogTitle className="text-headline-sm text-on-surface">
           {app.scholarship.title}
         </DialogTitle>
-        <DialogDescription>
-           {app.scholarship.funding} · Due {formatDate(app.scholarship.deadline)}
+        <DialogDescription className="text-body-sm text-on-surface-variant">
+          {app.scholarship.funding} · Due {formatDate(app.scholarship.deadline)}
         </DialogDescription>
       </DialogHeader>
 
       <div className="mt-4 space-y-5">
         <div className="space-y-2">
-          <Label>Status</Label>
+          <Label className="text-label-md text-on-surface-variant">Status</Label>
           <Select
             value={app.status}
             onValueChange={(v) => handleStatusChange(v as ApplicationStatus)}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full border-outline-variant">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -442,8 +555,8 @@ function ApplicationEditor({
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>Progress</Label>
-            <span className="text-sm text-muted-foreground">{progress}%</span>
+            <Label className="text-label-md text-on-surface-variant">Progress</Label>
+            <span className="text-body-sm text-on-surface-variant">{progress}%</span>
           </div>
           <input
             type="range"
@@ -458,23 +571,24 @@ function ApplicationEditor({
         </div>
 
         <div className="space-y-2">
-          <Label>Notes</Label>
+          <Label className="text-label-md text-on-surface-variant">Notes</Label>
           <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add requirements, essay ideas, deadlines, or contacts…"
             rows={5}
+            className="border-outline-variant bg-surface-container-low text-on-surface placeholder:text-on-surface-variant"
           />
         </div>
 
-        <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground">
+        <div className="rounded-lg border border-outline-variant/30 bg-surface-container-low p-3 text-body-sm text-on-surface-variant">
           <p>
-            <span className="font-medium text-foreground">Created:</span>{' '}
+            <span className="font-medium text-on-surface">Created:</span>{' '}
             {formatDate(app.created_at)}
           </p>
           {app.updated_at && app.updated_at !== app.created_at && (
             <p className="mt-1">
-              <span className="font-medium text-foreground">Updated:</span>{' '}
+              <span className="font-medium text-on-surface">Updated:</span>{' '}
               {formatDate(app.updated_at)}
             </p>
           )}
@@ -484,10 +598,20 @@ function ApplicationEditor({
           <div className="flex gap-2">
             {confirmDelete ? (
               <>
-                <Button variant="destructive" size="sm" onClick={onDelete}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={onDelete}
+                  className="bg-error text-on-error hover:bg-error/90"
+                >
                   Confirm delete
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setConfirmDelete(false)}
+                  className="text-on-surface-variant"
+                >
                   Cancel
                 </Button>
               </>
@@ -495,23 +619,27 @@ function ApplicationEditor({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                className="text-error hover:bg-error-container hover:text-on-error-container"
                 onClick={() => setConfirmDelete(true)}
               >
-                <Trash2 className="mr-1 h-3.5 w-3.5" />
+                <span className="material-symbols-outlined text-sm mr-1">delete</span>
                 Delete
               </Button>
             )}
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-               <a href={app.scholarship.official_link} target="_blank" rel="noopener noreferrer">
+            <Button asChild variant="outline" size="sm" className="border-outline-variant text-on-surface hover:bg-surface-container-high">
+              <a href={app.scholarship.official_link} target="_blank" rel="noopener noreferrer">
                 Open application
-                <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                <span className="material-symbols-outlined text-sm ml-1.5">open_in_new</span>
               </a>
             </Button>
-            <Button size="sm" onClick={saveNotes}>
-              <Save className="mr-1 h-3.5 w-3.5" />
+            <Button
+              size="sm"
+              onClick={saveNotes}
+              className="bg-primary text-on-primary hover:opacity-90"
+            >
+              <span className="material-symbols-outlined text-sm mr-1">save</span>
               Save notes
             </Button>
           </div>
@@ -581,25 +709,29 @@ function AddApplicationSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-md">
+      <SheetContent className="w-full overflow-y-auto sm:max-w-md bg-surface-container-lowest border-outline-variant/30">
         <SheetHeader>
-          <SheetTitle>Track a new application</SheetTitle>
-          <SheetDescription>
+          <SheetTitle className="text-headline-sm text-on-surface">
+            Track a new application
+          </SheetTitle>
+          <SheetDescription className="text-body-sm text-on-surface-variant">
             Pick a scholarship from your saved list to start tracking.
           </SheetDescription>
         </SheetHeader>
         <div className="mt-4 space-y-3">
           {loading ? (
             <div className="flex justify-center py-10">
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <span className="material-symbols-outlined animate-spin text-on-surface-variant text-xl">
+                progress_activity
+              </span>
             </div>
           ) : saved.length === 0 ? (
-            <div className="rounded-lg border border-dashed p-6 text-center">
-              <p className="text-sm font-medium">No saved scholarships</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+            <div className="rounded-xl border border-outline-variant bg-surface-container-low p-6 text-center">
+              <p className="text-body-md font-medium text-on-surface">No saved scholarships</p>
+              <p className="mt-1 text-body-sm text-on-surface-variant">
                 Save scholarships first, then track them here.
               </p>
-              <Button asChild size="sm" variant="outline" className="mt-3">
+              <Button asChild size="sm" variant="outline" className="mt-3 border-outline-variant text-on-surface hover:bg-surface-container-high">
                 <Link href="/scholarships">Browse scholarships</Link>
               </Button>
             </div>
@@ -607,24 +739,31 @@ function AddApplicationSheet({
             saved.map((s) => {
               const tracked = trackedIds.has(s.scholarship.id);
               return (
-                <div key={s.id} className="rounded-lg border bg-card p-3">
-                  <p className="text-sm font-medium">{s.scholarship.title}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                     {s.scholarship.funding}
+                <div
+                  key={s.id}
+                  className="rounded-xl border border-outline-variant/30 bg-surface-container-lowest p-md shadow-sm"
+                >
+                  <p className="text-body-md font-medium text-on-surface">{s.scholarship.title}</p>
+                  <p className="mt-0.5 text-body-sm text-on-surface-variant">
+                    {s.scholarship.funding}
                   </p>
                   <div className="mt-3 flex items-center justify-between">
                     <DeadlinePill dateStr={s.scholarship.deadline} />
                     {tracked ? (
-                      <Badge variant="secondary">Tracking</Badge>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => startTracking(s.scholarship.id)}
+                      <Badge
+                        variant="secondary"
+                        className="bg-surface-container-high text-on-surface-variant"
                       >
-                        <Plus className="mr-1 h-3.5 w-3.5" />
+                        Tracking
+                      </Badge>
+                    ) : (
+                      <button
+                        onClick={() => startTracking(s.scholarship.id)}
+                        className="flex items-center gap-xs bg-secondary-container text-on-secondary-container rounded-full px-md py-xs text-label-sm font-medium transition-opacity hover:opacity-90"
+                      >
+                        <span className="material-symbols-outlined text-base">add</span>
                         Track
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -632,9 +771,12 @@ function AddApplicationSheet({
             })
           )}
           {saved.length > 0 && (
-            <Button className="w-full" onClick={onAdded}>
+            <button
+              onClick={onAdded}
+              className="w-full bg-primary text-on-primary rounded-full px-md py-xs text-label-md font-medium transition-opacity hover:opacity-90"
+            >
               Done
-            </Button>
+            </button>
           )}
         </div>
       </SheetContent>

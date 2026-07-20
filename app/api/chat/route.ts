@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     }
 
     // Fetch user context from DB
-    const [profileRes, savedRes, appsRes, allRes] = await Promise.all([
+    const [profileRes, savedRes, appsRes, allRes, filesRes] = await Promise.all([
       supabaseAdmin.from('profiles').select('*').eq('id', userId).maybeSingle(),
       supabaseAdmin
         .from('saved_scholarships')
@@ -36,6 +36,12 @@ export async function POST(req: Request) {
         .select('*, scholarship:scholarships(*)')
         .eq('user_id', userId),
       supabaseAdmin.from('scholarships').select('*'),
+      supabaseAdmin
+        .from('context_files')
+        .select('name, content')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10),
     ]);
 
     const profile = profileRes.data;
@@ -98,6 +104,16 @@ export async function POST(req: Request) {
     contextParts.push(
       `CATALOG: ${allScholarships.length} scholarships available in the database.`
     );
+
+    const contextFiles = (filesRes.data ?? []) as { name: string; content: string }[];
+    if (contextFiles.length > 0) {
+      const filesBlock = contextFiles
+        .map((f) => `[${f.name}]\n${f.content.slice(0, 3000)}`)
+        .join('\n\n---\n\n');
+      contextParts.push(
+        `UPLOADED DOCUMENTS (${contextFiles.length} files):\n${filesBlock}`
+      );
+    }
 
     const contextBlock = contextParts.join('\n\n');
 

@@ -7,8 +7,8 @@ const statusConfig: Record<
 > = {
   not_started: {
     label: 'Not started',
-    className: 'bg-muted text-muted-foreground border-border',
-    dot: 'bg-muted-foreground',
+    className: 'bg-surface-container-high text-on-surface-variant border-outline-variant/30',
+    dot: 'bg-on-surface-variant',
   },
   researching: {
     label: 'Researching',

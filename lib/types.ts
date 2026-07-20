@@ -109,6 +109,52 @@ export type Database = {
         Update: Partial<Database['public']['Tables']['applications']['Row']>;
         Relationships: [];
       };
+      context_files: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          file_type: string;
+          file_size: number;
+          content: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          name: string;
+          file_type: string;
+          file_size: number;
+          content?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['context_files']['Row']>;
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          message: string;
+          type: string;
+          read: boolean;
+          link: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string;
+          title: string;
+          message: string;
+          type?: string;
+          read?: boolean;
+          link?: string | null;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['notifications']['Row']>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -122,6 +168,8 @@ export type Scholarship = Database['public']['Tables']['scholarships']['Row'];
 export type SavedScholarship =
   Database['public']['Tables']['saved_scholarships']['Row'];
 export type Application = Database['public']['Tables']['applications']['Row'];
+export type ContextFile = Database['public']['Tables']['context_files']['Row'];
+export type Notification = Database['public']['Tables']['notifications']['Row'];
 
 export const APPLICATION_STATUSES = [
   'not_started',
@@ -159,4 +207,13 @@ export type ApplicationUpdate = {
   status?: string;
   notes?: string | null;
   progress?: number;
+};
+
+export type NotificationType = 'deadline' | 'status' | 'general';
+
+export type NotificationInput = {
+  title: string;
+  message: string;
+  type?: NotificationType;
+  link?: string | null;
 };

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScholarMatch - AI Admissions Copilot</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Hanken Grotesk Font -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container": "#e5eeff",
+                "primary-container": "#1a2b48",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "on-tertiary-fixed-variant": "#5a00c6",
+                "inverse-primary": "#b6c7eb",
+                "secondary": "#006591",
+                "on-primary": "#ffffff",
+                "primary": "#031632",
+                "on-error-container": "#93000a",
+                "tertiary-container": "#380081",
+                "surface-container-high": "#dce9ff",
+                "tertiary-fixed-dim": "#d2bbff",
+                "surface-dim": "#cbdbf5",
+                "surface-container-low": "#eff4ff",
+                "primary-fixed-dim": "#b6c7eb",
+                "surface-bright": "#f8f9ff",
+                "on-primary-fixed": "#081b38",
+                "background": "#f8f9ff",
+                "on-surface-variant": "#44474d",
+                "secondary-fixed": "#c9e6ff",
+                "on-secondary-container": "#004666",
+                "secondary-fixed-dim": "#89ceff",
+                "on-background": "#0b1c30",
+                "on-tertiary-fixed": "#25005a",
+                "on-tertiary-container": "#a579ff",
+                "inverse-surface": "#213145",
+                "on-primary-container": "#8293b5",
+                "outline-variant": "#c5c6ce",
+                "on-primary-fixed-variant": "#374765",
+                "on-secondary-fixed-variant": "#004c6e",
+                "tertiary": "#1f004e",
+                "surface-tint": "#4e5f7e",
+                "on-secondary-fixed": "#001e2f",
+                "on-error": "#ffffff",
+                "surface": "#f8f9ff",
+                "surface-container-lowest": "#ffffff",
+                "inverse-on-surface": "#eaf1ff",
+                "error": "#ba1a1a",
+                "primary-fixed": "#d7e2ff",
+                "outline": "#75777e",
+                "tertiary-fixed": "#eaddff",
+                "secondary-container": "#39b8fd",
+                "on-secondary": "#ffffff",
+                "surface-container-highest": "#d3e4fe",
+                "on-surface": "#0b1c30",
+                "surface-variant": "#d3e4fe"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "margin-desktop": "48px",
+                "margin-mobile": "16px",
+                "xs": "4px",
+                "sm": "8px",
+                "base": "8px",
+                "lg": "24px",
+                "xl": "40px",
+                "gutter": "24px",
+                "md": "16px"
+            },
+            "fontFamily": {
+                "headline-md": ["Hanken Grotesk"],
+                "body-lg": ["Hanken Grotesk"],
+                "label-sm": ["Hanken Grotesk"],
+                "headline-lg-mobile": ["Hanken Grotesk"],
+                "body-sm": ["Hanken Grotesk"],
+                "body-md": ["Hanken Grotesk"],
+                "headline-sm": ["Hanken Grotesk"],
+                "headline-lg": ["Hanken Grotesk"],
+                "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .ai-surface-glow {
+            box-shadow: inset 0 0 12px rgba(165, 121, 255, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+        .scholarship-card:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+<div class="flex min-h-screen overflow-hidden">
+<!-- SideNavBar Component -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-surface-container-low dark:bg-primary-container p-md gap-sm border-r border-outline-variant/30">
+<div class="flex items-center gap-md px-sm py-md">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">ScholarMatch</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container/70 opacity-80">AI Admissions Copilot</p>
+</div>
+</div>
+<nav class="flex-1 mt-lg space-y-xs">
+<!-- Dashboard Active State -->
+<a class="flex items-center gap-md px-md py-sm bg-tertiary-container text-on-tertiary-container dark:bg-tertiary dark:text-on-tertiary rounded-lg font-semibold shadow-sm active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-md text-label-md">Scholarships</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-md text-label-md">Universities</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-md text-label-md">AI Advisor</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md text-label-md">Applications</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg space-y-md">
+<div class="p-md bg-primary-container text-on-primary-container rounded-xl">
+<h3 class="font-label-md text-label-md font-bold text-white mb-xs">Upgrade to Pro</h3>
+<p class="text-[12px] opacity-70 mb-sm">Unlock unlimited AI insights and early application alerts.</p>
+<button class="w-full py-sm bg-secondary-container text-on-secondary-container rounded-lg font-bold text-label-sm">Upgrade</button>
+</div>
+<div class="space-y-xs">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-error hover:bg-error-container rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Log Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-surface-bright flex flex-col">
+<!-- TopNavBar Component -->
+<header class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm sticky top-0 z-10">
+<div class="flex items-center gap-xl flex-1 max-w-2xl">
+<div class="relative w-full max-w-md hidden sm:block">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-xl pr-md py-2.5 bg-surface-container border-none focus:ring-2 focus:ring-secondary/20 rounded-full font-body-md text-on-surface" placeholder="Search scholarships, universities, or countries..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="p-sm text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center gap-md pl-md border-l border-outline-variant/30">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-label-md text-on-surface font-bold">Alex Chen</p>
+<p class="text-[12px] text-outline">Undergraduate Applicant</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-surface-container" data-alt="A professional studio portrait of a friendly young man of East Asian descent with a gentle smile, dressed in a smart casual dark navy sweater, set against a soft blurred academic background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaUeW7HuOn4mybRav9O0AqQpWCSU2HRzpoHo6JJeD9Yg0eQ17E6c8k092YhJ2z5u2ewCqi8QmLmZ_CKpu-bnQ_Dtd22K2rEYtT1iL3KImZpmaV3asQPPBnn4Avh3MP2G2aKb2WujKiAtTmBCpo1XtKhVVpPUgViEiRV19gMpXSJne_OoN5rJcb3mRpyz28teOJdMt_uJSJD7tEgV3sqwnogQqGlvl10ZQfskBSCcq6AIoWtFoyehQ8LTnUueC5RWmZS97FQThzvQ"/>
+</div>
+</div>
+</header>
+<div class="px-margin-mobile md:px-margin-desktop py-xl space-y-xl max-w-7xl mx-auto w-full">
+<!-- Welcome Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Welcome, Alex Chen</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant/80">Ready to find your perfect academic path today?</p>
+</div>
+<div class="flex flex-wrap gap-sm">
+<button class="flex items-center gap-sm px-lg py-sm bg-primary text-on-primary rounded-xl font-bold transition-all hover:opacity-90 shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[20px]">search</span>
+<span class="font-label-md text-label-md">Find Scholarships</span>
+</button>
+<button class="flex items-center gap-sm px-lg py-sm bg-surface-container-lowest border border-outline-variant/30 text-on-surface rounded-xl font-bold transition-all hover:bg-surface-container active:scale-95">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span class="font-label-md text-label-md">Check Eligibility</span>
+</button>
+</div>
+</div>
+<!-- Bento Statistics Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Stats Card 1 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-outline-variant/20 flex flex-col gap-xs">
+<div class="flex items-center justify-between mb-sm">
+<span class="p-xs bg-secondary-fixed text-on-secondary-fixed-variant rounded-lg">
+<span class="material-symbols-outlined">library_books</span>
+</span>
+<span class="text-[12px] font-bold text-success-container text-green-600">+12 this week</span>
+</div>
+<p class="text-headline-md font-headline-md text-primary">1,240+</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Scholarships Found</p>
+</div>
+<!-- Stats Card 2 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-outline-variant/20 flex flex-col gap-xs">
+<div class="flex items-center justify-between mb-sm">
+<span class="p-xs bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-lg">
+<span class="material-symbols-outlined">outgoing_mail</span>
+</span>
+<span class="text-[12px] font-bold text-on-surface-variant">2 pending</span>
+</div>
+<p class="text-headline-md font-headline-md text-primary">8</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Applications Submitted</p>
+</div>
+<!-- Stats Card 3 -->
+<div class="bg-error-container/20 p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-error/10 flex flex-col gap-xs">
+<div class="flex items-center justify-between mb-sm">
+<span class="p-xs bg-error-container text-on-error-container rounded-lg">
+<span class="material-symbols-outlined">event_note</span>
+</span>
+<span class="text-[12px] font-bold text-error">Critical</span>
+</div>
+<p class="text-headline-md font-headline-md text-primary">3</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Deadlines This Month</p>
+</div>
+<!-- Stats Card 4 -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-outline-variant/20 flex flex-col gap-xs">
+<div class="flex items-center justify-between mb-sm">
+<span class="p-xs bg-primary-fixed text-on-primary-fixed-variant rounded-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">monetization_on</span>
+</span>
+<span class="text-[12px] font-bold text-green-600">Calculated</span>
+</div>
+<p class="text-headline-md font-headline-md text-primary">$120k</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estimated Funding</p>
+</div>
+</div>
+<!-- Main Layout Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Left Column: AI Recommendations -->
+<div class="lg:col-span-2 space-y-lg">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                                AI Recommendations
+                            </h3>
+<a class="text-secondary font-label-md text-label-md hover:underline" href="#">View all recommendations</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Rec Card 1 -->
+<div class="ai-surface-glow p-lg rounded-xl scholarship-card cursor-pointer border border-tertiary-container/10 group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant/30 overflow-hidden shadow-sm">
+<img class="w-10 h-10 object-contain" data-alt="A clean, minimalist logo of a prestigious technology university featuring a stylized blue crest and a white background, symbolizing innovation and academic excellence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq_VJbhqLMoHQAhDU18oq3PcInDRSdCRqI1ZQNv220ottWZlBRIyLQSbbhVUI_DbrEI3xWZP27fyNVqmzqX3RdmSqbRtrgbsjruIBM5PLmYQoM4ssSFw0kirNlChSyAa9RIxvuBAezKTWyxAyG4QFYiRAQDdGHiGvK9MBLGZQeVzGJgOyeSPQCuUwKnNF0MgvMXVx9T-OJeuZFQaEsDrYICNtjBp6SA4FptZqlhkVQWS9-QAaNTZfmA-QZUQvXAVp9fwkUKj4AWw"/>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-[12px] font-bold">98% Match</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-xs">Global Tech Innovators Fund</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Awarded for excellence in Computer Science and emerging technology research.</p>
+<div class="flex items-center justify-between mt-auto">
+<div>
+<p class="text-[12px] text-outline">Amount</p>
+<p class="font-label-md text-label-md font-bold text-primary">$45,000 /yr</p>
+</div>
+<button class="p-sm bg-primary text-on-primary rounded-lg transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Rec Card 2 -->
+<div class="ai-surface-glow p-lg rounded-xl scholarship-card cursor-pointer border border-tertiary-container/10 group">
+<div class="flex justify-between items-start mb-md">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center border border-outline-variant/30 overflow-hidden shadow-sm">
+<img class="w-10 h-10 object-contain" data-alt="A professional logo of a philanthropic foundation featuring a golden oak leaf emblem on a clean white field, representing growth, support, and longevity in education." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1RR7XvZEX-NiYTpsZMJwSZKubA0L5aC5CDJb5gSfjhFyTa1CaBnhxLjc5yGTSt6km3n31bNYWthBF-HuQaXKDgddXpqgdX20bkO9bXeySahYBFqOSH-_2puAo_6hg-z_QOAht9UbKwSbL3GqMZVZt2BNn64U6tt2U6eLhkm1eXCAp06hOjmXcqCUPK9tXfy9yG0au1UaR_LFrGUZs5aLlSUQlp5eohgqs4stSN2mm2nhlcvckmm1aVTZs8e27PZuhFgoDlhoeaw"/>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-[12px] font-bold">94% Match</span>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-xs">Next-Gen Leaders Scholarship</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Targeted at students demonstrating community impact and leadership potential.</p>
+<div class="flex items-center justify-between mt-auto">
+<div>
+<p class="text-[12px] text-outline">Amount</p>
+<p class="font-label-md text-label-md font-bold text-primary">$20,000 Total</p>
+</div>
+<button class="p-sm bg-primary text-on-primary rounded-lg transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Rec Card 3 -->
+<div class="ai-surface-glow p-lg rounded-xl scholarship-card cursor-pointer border border-tertiary-container/10 group md:col-span-2">
+<div class="flex flex-col md:flex-row gap-lg">
+<div class="flex-1">
+<div class="flex items-center gap-md mb-md">
+<div class="bg-tertiary-container text-on-tertiary-container px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-[12px] font-bold">92% Match</span>
+</div>
+<span class="text-[12px] text-outline">Newest Opportunity</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-xs">International Merit Award - Stanford University</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Full-ride tuition coverage for exceptional international applicants with a focus on interdisciplinary studies.</p>
+</div>
+<div class="flex flex-col justify-between items-end border-l border-outline-variant/30 pl-lg min-w-[180px]">
+<div class="text-right">
+<p class="text-[12px] text-outline">Award Value</p>
+<p class="font-headline-sm text-headline-sm text-green-600">Full Tuition</p>
+</div>
+<button class="w-full py-sm bg-primary text-on-primary rounded-lg font-bold transition-all hover:shadow-md">Apply Now</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Upcoming Deadlines -->
+<div class="space-y-lg">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-primary">Deadlines</h3>
+<button class="p-xs text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">calendar_month</span>
+</button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_1px_3px_0_rgba(0,0,0,0.05)] border border-outline-variant/20 overflow-hidden">
+<div class="p-lg space-y-md">
+<!-- Deadline Item 1 -->
+<div class="flex gap-md group cursor-pointer">
+<div class="flex flex-col items-center justify-center w-12 h-14 bg-error-container text-on-error-container rounded-lg">
+<span class="text-[10px] font-bold uppercase">Oct</span>
+<span class="text-headline-sm font-bold">24</span>
+</div>
+<div class="flex-1 min-w-0">
+<h5 class="font-label-md text-label-md font-bold text-primary truncate group-hover:text-secondary transition-colors">National University of Singapore</h5>
+<p class="text-[12px] text-on-surface-variant">Early Admission Round 1</p>
+<div class="mt-xs w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="bg-error w-4/5 h-full"></div>
+</div>
+<p class="text-[10px] text-error mt-xs font-bold">5 days left</p>
+</div>
+</div>
+<div class="h-px bg-outline-variant/20"></div>
+<!-- Deadline Item 2 -->
+<div class="flex gap-md group cursor-pointer">
+<div class="flex flex-col items-center justify-center w-12 h-14 bg-surface-container text-on-surface-variant rounded-lg">
+<span class="text-[10px] font-bold uppercase">Nov</span>
+<span class="text-headline-sm font-bold">15</span>
+</div>
+<div class="flex-1 min-w-0">
+<h5 class="font-label-md text-label-md font-bold text-primary truncate group-hover:text-secondary transition-colors">University of Toronto</h5>
+<p class="text-[12px] text-on-surface-variant">Lester B. Pearson Scholarship</p>
+<div class="mt-xs w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="bg-secondary w-2/5 h-full"></div>
+</div>
+<p class="text-[10px] text-outline mt-xs">27 days left</p>
+</div>
+</div>
+<div class="h-px bg-outline-variant/20"></div>
+<!-- Deadline Item 3 -->
+<div class="flex gap-md group cursor-pointer">
+<div class="flex flex-col items-center justify-center w-12 h-14 bg-surface-container text-on-surface-variant rounded-lg">
+<span class="text-[10px] font-bold uppercase">Dec</span>
+<span class="text-headline-sm font-bold">01</span>
+</div>
+<div class="flex-1 min-w-0">
+<h5 class="font-label-md text-label-md font-bold text-primary truncate group-hover:text-secondary transition-colors">Imperial College London</h5>
+<p class="text-[12px] text-on-surface-variant">President's Scholarship Program</p>
+<div class="mt-xs w-full bg-surface-container h-1 rounded-full overflow-hidden">
+<div class="bg-secondary w-1/5 h-full"></div>
+</div>
+<p class="text-[10px] text-outline mt-xs">42 days left</p>
+</div>
+</div>
+</div>
+<button class="w-full py-md bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">
+                                View Full Calendar
+                            </button>
+</div>
+<!-- Mini Quick Action Cards -->
+<div class="space-y-sm pt-md">
+<div class="p-md bg-secondary-container/10 border border-secondary/10 rounded-xl flex items-center gap-md">
+<span class="material-symbols-outlined text-secondary">auto_awesome</span>
+<div class="flex-1">
+<p class="font-label-md text-label-md font-bold text-on-secondary-container">Application Assistant</p>
+<p class="text-[12px] text-on-secondary-container/80">Draft your personal statement</p>
+</div>
+<button class="material-symbols-outlined text-on-secondary-container">chevron_right</button>
+</div>
+<div class="p-md bg-tertiary-container/10 border border-tertiary/10 rounded-xl flex items-center gap-md">
+<span class="material-symbols-outlined text-on-tertiary-container">history_edu</span>
+<div class="flex-1">
+<p class="font-label-md text-label-md font-bold text-on-tertiary-container">Document Vault</p>
+<p class="text-[12px] text-on-tertiary-container/80">4 pending verifications</p>
+</div>
+<button class="material-symbols-outlined text-on-tertiary-container">chevron_right</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Mobile Bottom Navigation Shell (Suppressed on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest flex justify-around items-center py-3 border-t border-outline-variant/30 z-20">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="text-[10px]">Scholarships</span>
+</a>
+<div class="bg-primary p-3 rounded-full -mt-8 shadow-lg text-on-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-[10px]">Apps</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px]">Profile</span>
+</a>
+</nav>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple search bar focus interaction
+        const searchBar = document.querySelector('input[type="text"]');
+        if (searchBar) {
+            searchBar.addEventListener('focus', () => {
+                searchBar.parentElement.classList.add('shadow-md');
+            });
+            searchBar.addEventListener('blur', () => {
+                searchBar.parentElement.classList.remove('shadow-md');
+            });
+        }
+
+        // Dashboard active click logic is static in this demo
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (link.classList.contains('active:scale-95')) {
+                    // Small visual feedback animation handled by Tailwind classes
+                }
+            });
+        });
+    </script>
+</body></html>

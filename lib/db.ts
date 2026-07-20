@@ -3,6 +3,9 @@ import type {
   Application,
   ApplicationInput,
   ApplicationUpdate,
+  ContextFile,
+  Notification,
+  NotificationInput,
   Profile,
   ProfileInput,
   SavedScholarship,
@@ -310,4 +313,118 @@ export function scoreTone(score: number) {
     label: 'Reach',
     className: 'bg-muted text-muted-foreground',
   };
+}
+
+// ============================================================
+// Context Files (owner-scoped CRUD)
+// ============================================================
+
+export async function listContextFiles(userId: string) {
+  const { data, error } = await supabase
+    .from('context_files')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as ContextFile[];
+}
+
+export async function uploadContextFile(
+  file: { name: string; file_type: string; file_size: number; content: string },
+  userId: string
+) {
+  const { data, error } = await supabase
+    .from('context_files')
+    .insert({
+      user_id: userId,
+      name: file.name,
+      file_type: file.file_type,
+      file_size: file.file_size,
+      content: file.content,
+    })
+    .select('*')
+    .maybeSingle();
+  if (error) throw error;
+  return data as ContextFile;
+}
+
+export async function deleteContextFile(id: string) {
+  const { error } = await supabase.from('context_files').delete().eq('id', id);
+  if (error) throw error;
+  return true;
+}
+
+// ============================================================
+// Notifications (owner-scoped CRUD)
+// ============================================================
+
+export async function listNotifications(userId: string, unreadOnly = false) {
+  let q = supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId);
+
+  if (unreadOnly) {
+    q = q.eq('read', false);
+  }
+
+  const { data, error } = await q.order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as Notification[];
+}
+
+export async function getUnreadNotificationCount(userId: string) {
+  const { count, error } = await supabase
+    .from('notifications')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('read', false);
+  if (error) throw error;
+  return count ?? 0;
+}
+
+export async function markNotificationAsRead(id: string) {
+  const { data, error } = await supabase
+    .from('notifications')
+    .update({ read: true })
+    .eq('id', id)
+    .select('*')
+    .maybeSingle();
+  if (error) throw error;
+  return data as Notification | null;
+}
+
+export async function markAllNotificationsAsRead(userId: string) {
+  const { error } = await supabase
+    .from('notifications')
+    .update({ read: true })
+    .eq('user_id', userId)
+    .eq('read', false);
+  if (error) throw error;
+  return true;
+}
+
+export async function deleteNotification(id: string) {
+  const { error } = await supabase.from('notifications').delete().eq('id', id);
+  if (error) throw error;
+  return true;
+}
+
+export async function createNotification(
+  userId: string,
+  input: NotificationInput
+) {
+  const { data, error } = await supabase
+    .from('notifications')
+    .insert({
+      user_id: userId,
+      title: input.title,
+      message: input.message,
+      type: input.type ?? 'general',
+      link: input.link ?? null,
+    })
+    .select('*')
+    .maybeSingle();
+  if (error) throw error;
+  return data as Notification;
 }

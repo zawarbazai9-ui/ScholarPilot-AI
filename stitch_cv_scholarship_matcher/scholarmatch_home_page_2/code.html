@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScholarMatch | Your Future, Powered by AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#272d3e",
+                    "inverse-surface": "#eaf1ff",
+                    "on-tertiary-fixed-variant": "#d2bbff",
+                    "tertiary-fixed-dim": "#d2bbff",
+                    "surface-tint": "#b6c7eb",
+                    "primary-fixed": "#d7e2ff",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-primary-fixed-variant": "#b6c7eb",
+                    "surface-dim": "#0d1322",
+                    "primary-fixed-dim": "#b6c7eb",
+                    "inverse-primary": "#031632",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#080e1d",
+                    "on-tertiary-fixed": "#25005a",
+                    "surface-variant": "#44474d",
+                    "on-surface": "#eaf1ff",
+                    "on-primary-container": "#d7e2ff",
+                    "error-container": "#93000a",
+                    "on-secondary": "#00354e",
+                    "on-secondary-fixed": "#001e2f",
+                    "surface-container-low": "#151b2b",
+                    "inverse-on-surface": "#0b1c30",
+                    "surface-container-highest": "#33394a",
+                    "tertiary": "#d2bbff",
+                    "on-primary": "#002f66",
+                    "outline-variant": "#44474d",
+                    "tertiary-container": "#5a00c6",
+                    "surface-container": "#1d2334",
+                    "surface": "#0d1322",
+                    "primary-container": "#374765",
+                    "surface-bright": "#33394a",
+                    "on-surface-variant": "#c5c6ce",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "on-background": "#eaf1ff",
+                    "outline": "#8e9099",
+                    "secondary-fixed-dim": "#89ceff",
+                    "tertiary-fixed": "#eaddff",
+                    "on-tertiary": "#380081",
+                    "background": "#0d1322",
+                    "on-primary-fixed": "#001b3c",
+                    "on-error": "#690005",
+                    "secondary": "#89ceff",
+                    "primary": "#b6c7eb",
+                    "secondary-container": "#004c6e",
+                    "on-tertiary-container": "#eaddff",
+                    "on-secondary-container": "#c9e6ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "48px",
+                    "xl": "40px",
+                    "lg": "24px",
+                    "base": "8px",
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "label-md": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-sm": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(29, 35, 52, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(68, 71, 77, 0.5);
+        }
+        .ai-glow {
+            box-shadow: inset 0 0 20px rgba(182, 199, 235, 0.05), 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .ai-gradient-text {
+            background: linear-gradient(135deg, #b6c7eb 0%, #89ceff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .ai-button {
+            background: linear-gradient(135deg, #374765 0%, #1a2b48 100%);
+            transition: all 0.3s ease;
+        }
+        .ai-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/20">
+<nav class="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+<div class="text-headline-sm font-headline-sm font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">school</span>
+                ScholarMatch
+            </div>
+<div class="hidden md:flex items-center gap-8 font-label-md text-label-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#features">Features</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#universities">Universities</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#pricing">Pricing</a>
+</div>
+<div class="flex items-center gap-4">
+<a class="hidden sm:block font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Login</a>
+<button class="bg-primary text-inverse-primary px-6 py-2.5 rounded-lg font-label-md text-label-md active:scale-95 transition-all shadow-sm">
+                    Sign Up
+                </button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24 px-margin-mobile md:px-margin-desktop">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full font-label-sm text-label-sm mb-6 border border-outline-variant/30">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                        Next-Gen Academic Engine
+                    </div>
+<h1 class="font-headline-lg text-headline-lg md:text-[56px] md:leading-[1.1] text-on-surface mb-6">
+                        Your Future, <span class="ai-gradient-text">Powered by AI.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl">
+                        Upload your CV and let our intelligent engine match your academic profile to over <span class="font-semibold text-primary">$40M</span> in global scholarship opportunities.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="ai-button text-on-primary-container px-8 py-4 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 border border-outline-variant/20">
+                            Get Started - Free
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container text-on-surface px-8 py-4 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+                            Watch Demo
+                        </button>
+</div>
+</div>
+<div class="relative">
+<!-- Dashboard Mockup Placeholder -->
+<div class="relative z-10 glass-card rounded-xl p-2 shadow-2xl ring-1 ring-outline-variant/20">
+<img class="rounded-lg w-full aspect-video object-cover shadow-sm opacity-90 contrast-110" data-alt="A clean, minimalist high-fidelity SaaS dashboard for ScholarMatch. The UI shows a central scholarship matching feed with deep blue headers and soft purple AI highlights. Cards display academic stats like 95 percent match accuracy and progress bars for scholarship applications. The lighting is bright and professional, mimicking a high-definition productivity tool interface with crisp typography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7Aetx-WDon8ZXCsU-Ly9rbCFiCdCB2qgNPVpLN9nVbhoBfxJzfLxN4Jt980qs9FuwYXTX4FKMP7VMOe5Y1xukOUjwUK__nAmmwAYJH84svHvjvXhMLlkJqcIa74SPGExb92tPQfcnzvYeuMBSDN4hlyaJzsEjyE2kSmgwY5TlusEMvaAKQNOzwPrFn1YYdkMjHz42Q8kfxigxT7Dp_cZFNvzUuAD8iuzq5gRH8oyZ5ZwiTvlG0T_yYsklBKlA4tiNTSejIB7XbA"/>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -top-12 -right-12 w-64 h-64 bg-primary-container/20 blur-3xl rounded-full -z-10"></div>
+<div class="absolute -bottom-12 -left-12 w-64 h-64 bg-secondary-container/20 blur-3xl rounded-full -z-10"></div>
+</div>
+</div>
+</section>
+<!-- Trust Bar -->
+<section class="py-12 bg-surface-container-low/30" id="universities">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<p class="text-center font-label-sm text-label-sm text-outline mb-10 uppercase tracking-widest">Partnering with Global Institutions</p>
+<div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 opacity-40 grayscale brightness-150 hover:grayscale-0 hover:opacity-100 transition-all duration-500 mb-12">
+<!-- Mock Logos -->
+<div class="flex items-center gap-2 font-bold text-headline-sm text-on-surface">STANFORD</div>
+<div class="flex items-center gap-2 font-bold text-headline-sm text-on-surface">OXFORD</div>
+<div class="flex items-center gap-2 font-bold text-headline-sm text-on-surface">CAMBRIDGE</div>
+<div class="flex items-center gap-2 font-bold text-headline-sm text-on-surface">MIT</div>
+<div class="flex items-center gap-2 font-bold text-headline-sm text-on-surface">HARVARD</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-outline-variant/20">
+<div class="text-center">
+<div class="font-headline-md text-headline-md text-primary">12k+</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Active Scholarships</div>
+</div>
+<div class="text-center">
+<div class="font-headline-md text-headline-md text-primary">$42M</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Total Funding</div>
+</div>
+<div class="text-center">
+<div class="font-headline-md text-headline-md text-primary">95%</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Match Accuracy</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Core Features -->
+<section class="py-24 px-margin-mobile md:px-margin-desktop bg-surface" id="features">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Precision Tools for Success</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">Our platform combines academic rigor with high-velocity SaaS efficiency to streamline your scholarship journey.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- AI Matching -->
+<div class="group p-8 bg-surface-container-lowest rounded-lg border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:bg-surface-container-low">
+<div class="w-12 h-12 bg-primary-container flex items-center justify-center rounded-lg mb-6 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">target</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">AI Matching</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Instantly find scholarships tailored to your GPA, major, and research interests with our proprietary deep-learning engine.
+                        </p>
+</div>
+<!-- Intelligent Advisor -->
+<div class="group p-8 bg-surface-container-lowest rounded-lg border border-outline-variant/30 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl ai-glow hover:bg-surface-container-low">
+<div class="w-12 h-12 bg-secondary-container flex items-center justify-center rounded-lg mb-6 text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">Intelligent Advisor</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Chat with Lumina, your personal AI copilot, to improve your Statement of Purpose and optimize your transcripts for specific committees.
+                        </p>
+</div>
+<!-- Application Tracker -->
+<div class="group p-8 bg-surface-container-lowest rounded-lg border border-outline-variant/30 hover:border-secondary/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:bg-surface-container-low">
+<div class="w-12 h-12 bg-surface-container-high flex items-center justify-center rounded-lg mb-6 text-on-surface">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">view_kanban</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">Application Tracker</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Never miss a deadline with our professional-grade Kanban management tool designed for complex academic submissions.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof / Testimonial -->
+<section class="py-24 bg-surface-container-low text-on-surface relative overflow-hidden">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-primary-container opacity-10 skew-x-12 translate-x-1/2"></div>
+<div class="max-w-4xl mx-auto px-margin-mobile relative z-10 text-center">
+<div class="inline-flex gap-1 mb-8">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<blockquote class="font-headline-md text-headline-md md:text-headline-lg italic mb-10 leading-snug text-on-surface">
+                    "ScholarMatch didn't just find me money; it found me the exact program that matched my research ambitions. Lumina helped me refine my SOP until it was bulletproof. I start at Cambridge this fall, fully funded."
+                </blockquote>
+<div class="flex items-center justify-center gap-4">
+<img class="w-16 h-16 rounded-full object-cover ring-2 ring-primary/30" data-alt="A professional portrait of a confident young postgraduate student" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPUbl0vVL32B15K7AUVpyF6KOqOZ4ENLRPDgd_BxrIvFimfcOOCp3zJaz0Tz1uX-epbkj9J-q7GeSx9lxZq_bVnE_s2kuUB_quGluV3L9rGduluK_w8xlZ0_r5PqCqoQYYHx_x2hGYFMb4OtFwHSKwM8U2P2t8Zee0PwTeXpI5M93-xDxe2bITBp6rlp5QB5pVzL-XthF4IVS_7LfdJ2jSayn6f-kkCxXiAhKhLz5aMaGd3OHN3or7boiE2Kou5v2bbKawran8GQ"/>
+<div class="text-left">
+<div class="font-label-md text-label-md font-bold text-on-surface">Elena Rodriguez</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">M.Sc. Theoretical Physics, University of Cambridge</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-24 px-margin-mobile md:px-margin-desktop bg-surface">
+<div class="max-w-5xl mx-auto glass-card rounded-xl p-12 text-center border border-outline-variant/30 shadow-2xl relative overflow-hidden ai-glow">
+<div class="relative z-10">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Ready to find your match?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl mx-auto">
+                        Join 50,000+ students securing their academic future with the world's most advanced scholarship matching engine.
+                    </p>
+<button class="ai-button text-on-primary-container px-12 py-5 rounded-lg font-label-md text-label-md text-lg active:scale-95 transition-all shadow-lg border border-outline-variant/20">
+                        Sign Up Now - It's Free
+                    </button>
+<p class="mt-6 font-label-sm text-label-sm text-outline">No credit card required. Cancel anytime.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant/20">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter px-margin-desktop py-xl max-w-7xl mx-auto">
+<div class="col-span-2 md:col-span-1">
+<div class="text-headline-sm font-headline-sm font-bold text-primary mb-6">ScholarMatch</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">
+                    Empowering academic excellence through intelligent profile matching and strategic advisor tools.
+                </p>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-4">Product</h4>
+<ul class="space-y-3 font-body-sm text-body-sm">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Features</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Scholarship Feed</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Lumina AI</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Pricing</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-4">Resources</h4>
+<ul class="space-y-3 font-body-sm text-body-sm">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Guides</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Blog</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">API</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Universities</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface mb-4">Company</h4>
+<ul class="space-y-3 font-body-sm text-body-sm">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">About</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-margin-desktop py-8 border-t border-outline-variant/10 text-center">
+<p class="font-body-sm text-body-sm text-outline">© 2024 ScholarMatch AI. Empowering academic excellence.</p>
+</div>
+</footer>
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.98)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'scale(1)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple scroll reveal effect
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section > div').forEach(el => {
+            el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-8');
+            observer.observe(el);
+        });
+    </script>
+</body></html>

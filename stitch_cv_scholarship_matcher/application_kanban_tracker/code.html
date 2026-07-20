@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScholarMatch | Application Tracker</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Hanken Grotesk -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#1a2b48",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#5a00c6",
+                    "inverse-primary": "#b6c7eb",
+                    "secondary": "#006591",
+                    "on-primary": "#ffffff",
+                    "primary": "#031632",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#380081",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-fixed-dim": "#d2bbff",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff",
+                    "primary-fixed-dim": "#b6c7eb",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary-fixed": "#081b38",
+                    "background": "#f8f9ff",
+                    "on-surface-variant": "#44474d",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-secondary-container": "#004666",
+                    "secondary-fixed-dim": "#89ceff",
+                    "on-background": "#0b1c30",
+                    "on-tertiary-fixed": "#25005a",
+                    "on-tertiary-container": "#a579ff",
+                    "inverse-surface": "#213145",
+                    "on-primary-container": "#8293b5",
+                    "outline-variant": "#c5c6ce",
+                    "on-primary-fixed-variant": "#374765",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "tertiary": "#1f004e",
+                    "surface-tint": "#4e5f7e",
+                    "on-secondary-fixed": "#001e2f",
+                    "on-error": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#d7e2ff",
+                    "outline": "#75777e",
+                    "tertiary-fixed": "#eaddff",
+                    "secondary-container": "#39b8fd",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "surface-variant": "#d3e4fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "48px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "base": "8px",
+                    "lg": "24px",
+                    "xl": "40px",
+                    "gutter": "24px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-sm": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #f8f9ff;
+            color: #0b1c30;
+        }
+        .kanban-column {
+            min-width: 300px;
+            max-width: 300px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden h-screen flex">
+<!-- SIDEBAR NAVIGATION (Authority: JSON & Contextual Logic) -->
+<!-- active_navigation logic applied to "Applications" -->
+<aside class="hidden md:flex flex-col h-screen p-md gap-sm bg-surface-container-low dark:bg-primary-container w-64 border-r border-outline-variant/30 flex-shrink-0">
+<div class="flex items-center gap-sm px-2 mb-xl">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">ScholarMatch</h1>
+<p class="font-label-sm text-label-sm text-on-primary-container opacity-80">AI Admissions Copilot</p>
+</div>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">school</span> Scholarships
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">account_balance</span> Universities
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">auto_awesome</span> AI Advisor
+            </a>
+<!-- ACTIVE TAB: Applications -->
+<a class="flex items-center gap-md p-md bg-tertiary-container text-on-tertiary-container dark:bg-tertiary dark:text-on-tertiary rounded-lg font-semibold shadow-sm transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span> Applications
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">person</span> Profile
+            </a>
+</nav>
+<div class="mt-auto space-y-1">
+<div class="p-md mb-md bg-primary-container rounded-xl text-on-primary-container">
+<p class="font-label-sm text-label-sm mb-2 opacity-90">Unlock personalized AI analysis</p>
+<button class="w-full py-2 bg-secondary-container text-on-secondary-container rounded-lg font-bold text-label-md hover:brightness-110 transition-all">
+                    Upgrade to Pro
+                </button>
+</div>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">help</span> Help Center
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-error">logout</span> Log Out
+            </a>
+</div>
+</aside>
+<!-- MAIN CONTENT CANVAS -->
+<main class="flex-grow flex flex-col h-full bg-background relative overflow-hidden">
+<!-- TOP APP BAR -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm z-20">
+<div class="flex items-center gap-lg">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Application Tracker</h2>
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-3 py-1.5 border border-outline-variant/20">
+<span class="material-symbols-outlined text-outline mr-2 text-sm">event</span>
+<span class="font-label-sm text-label-sm mr-4">Calendar View</span>
+<button class="relative inline-flex h-5 w-10 shrink-0 cursor-pointer items-center rounded-full bg-outline-variant transition-colors duration-200 focus:outline-none" id="calendarToggle" onclick="this.classList.toggle('bg-primary'); this.querySelector('span').classList.toggle('translate-x-5')">
+<span class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-1"></span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden sm:block">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-md">search</span>
+</span>
+<input class="bg-surface-container border-none rounded-full pl-10 pr-4 py-2 text-body-sm font-body-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search applications..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface-container-lowest"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container ml-2">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young adult college student with a friendly expression, set against a blurred academic background with warm, soft-key lighting that emphasizes a clean and modern scholarly aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtZwWLDZ2iniMEBhzRrW9thv49akkkWw-NhsFF47Oy8ZHUh61GlQuVVY8gweZCV7_vGGrUsjEV8luu-0UON7tSoCc0QOYEyCNmsastYs8vwsWdd2nW0EiDXkTdpwLo72KGbPAlVfKI191q84iNYGUq2K0l0Ep6ABvtAUl48Pq7kX7J44sg0l53h9cU4ngxpyzW1Azd-RU6z-4xJ895FZVUo5auqnqL_KQfdVGBUxaL4DVzf_x6K_0aHQVTjqayeRc0q6Nvy4_70A"/>
+</div>
+</div>
+</header>
+<!-- KANBAN BOARD CONTAINER -->
+<div class="flex-grow overflow-x-auto p-lg custom-scrollbar">
+<div class="flex gap-lg h-full">
+<!-- COLUMN: NOT STARTED -->
+<section class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Not Started</h3>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-xs font-bold text-on-surface-variant">2</span>
+</div>
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto custom-scrollbar pb-lg">
+<!-- Card 1 -->
+<div class="kanban-card bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 transition-all cursor-grab active:cursor-grabbing">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-surface-container text-on-surface-variant text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tighter">STEM Award</span>
+<span class="material-symbols-outlined text-outline text-sm">more_horiz</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm mb-1">Stanford University</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Knight-Hennessy Scholars</p>
+<div class="flex items-center gap-sm mb-4">
+<span class="material-symbols-outlined text-error text-sm">timer</span>
+<span class="font-label-sm text-label-sm text-error">12 days left</span>
+<span class="ml-auto bg-error-container text-on-error-container text-[10px] font-bold px-2 py-0.5 rounded">CRITICAL</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 mb-4">
+<div class="bg-outline h-1.5 rounded-full w-[5%]"></div>
+</div>
+<div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-sm">play_circle</span>
+<span class="font-label-sm text-label-sm text-primary">Start Draft</span>
+</div>
+<span class="material-symbols-outlined text-outline text-sm">attachment</span>
+</div>
+</div>
+</div>
+</section>
+<!-- COLUMN: PREPARING DOCUMENTS -->
+<section class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Preparing</h3>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-xs font-bold text-on-surface-variant">1</span>
+</div>
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto custom-scrollbar pb-lg">
+<!-- Card 2 -->
+<div class="kanban-card bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 transition-all">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tighter">Full Ride</span>
+<span class="material-symbols-outlined text-outline text-sm">more_horiz</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm mb-1">MIT</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Legatum Fellowship</p>
+<div class="flex items-center gap-sm mb-4">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">calendar_today</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">24 days left</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 mb-4">
+<div class="bg-secondary h-1.5 rounded-full w-[45%]"></div>
+</div>
+<div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary text-sm">mail</span>
+<span class="font-label-sm text-label-sm text-secondary">Email Professor</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-primary-container flex items-center justify-center text-[8px] text-white">AI</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- COLUMN: SUBMITTED -->
+<section class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Submitted</h3>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-xs font-bold text-on-surface-variant">1</span>
+</div>
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto custom-scrollbar pb-lg">
+<div class="kanban-card bg-surface-container-lowest p-md rounded-xl shadow-sm border border-outline-variant/30 transition-all opacity-80">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tighter">Merit Based</span>
+<span class="material-symbols-outlined text-outline text-sm">more_horiz</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm mb-1">Harvard University</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Boren Scholarship</p>
+<div class="flex items-center gap-sm mb-4">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Submitted Nov 12</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 mb-4">
+<div class="bg-tertiary-container h-1.5 rounded-full w-full"></div>
+</div>
+<div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">visibility</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Review Proof</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- COLUMN: INTERVIEW -->
+<section class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Interview</h3>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-xs font-bold text-on-surface-variant">1</span>
+</div>
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">add</span></button>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto custom-scrollbar pb-lg">
+<div class="kanban-card bg-surface-container-lowest p-md rounded-xl shadow-sm border-2 border-primary/20 transition-all">
+<div class="flex justify-between items-start mb-md">
+<span class="bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tighter">Finalist</span>
+<span class="material-symbols-outlined text-outline text-sm">more_horiz</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm mb-1">Oxford University</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Rhodes Scholarship</p>
+<div class="flex items-center gap-sm mb-4">
+<span class="material-symbols-outlined text-primary text-sm">videocam</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">Jan 15, 10:00 AM</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 mb-4">
+<div class="bg-primary h-1.5 rounded-full w-[85%]"></div>
+</div>
+<div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-sm">auto_awesome</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-fixed-variant font-semibold">Practice w/ AI</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- COLUMN: ACCEPTED -->
+<section class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Accepted</h3>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-xs font-bold text-on-surface-variant">1</span>
+</div>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto custom-scrollbar pb-lg">
+<div class="kanban-card bg-green-50 p-md rounded-xl shadow-sm border border-green-200 transition-all relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2">
+<span class="material-symbols-outlined text-green-500 opacity-20 text-6xl rotate-12 select-none" style="font-variation-settings: 'FILL' 1;">celebration</span>
+</div>
+<div class="flex justify-between items-start mb-md relative z-10">
+<span class="bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tighter">Awarded</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm mb-1 relative z-10 text-green-900">UC Berkeley</h4>
+<p class="font-body-sm text-body-sm text-green-800 mb-4 relative z-10">Regents' and Chancellor's</p>
+<div class="flex items-center gap-sm mb-4 relative z-10">
+<span class="material-symbols-outlined text-green-700 text-sm">verified</span>
+<span class="font-label-sm text-label-sm text-green-700 font-bold">$24,000 / Year</span>
+</div>
+<div class="pt-3 border-t border-green-200 flex items-center justify-between relative z-10">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-green-700 text-sm">file_download</span>
+<span class="font-label-sm text-label-sm text-green-700">Offer Letter</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- COLUMN: REJECTED -->
+<section class="kanban-column flex flex-col gap-md">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Rejected</h3>
+<span class="bg-surface-container-high px-2 py-0.5 rounded text-xs font-bold text-on-surface-variant">0</span>
+</div>
+</div>
+<div class="flex-grow border-2 border-dashed border-outline-variant/30 rounded-xl flex flex-col items-center justify-center p-xl text-center opacity-40">
+<span class="material-symbols-outlined text-4xl mb-2">inbox</span>
+<p class="font-label-sm text-label-sm">No applications here yet</p>
+</div>
+</section>
+</div>
+</div>
+<!-- FLOATING ACTION BUTTON (AI RELEVANT) -->
+<button class="fixed bottom-margin-desktop right-margin-desktop bg-primary text-on-primary w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform active:scale-95 group z-30">
+<span class="material-symbols-outlined group-hover:rotate-12 transition-transform">add</span>
+<span class="absolute right-full mr-4 bg-primary-container text-on-primary-container px-3 py-1.5 rounded-lg font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">New Application</span>
+</button>
+</main>
+<!-- CALENDAR PANEL (Hidden by default, triggered by toggle) -->
+<div class="fixed right-0 top-0 h-full w-80 bg-surface-container-lowest shadow-2xl z-40 transform translate-x-full transition-transform duration-300 ease-in-out border-l border-outline-variant/30" id="calendarPanel">
+<div class="p-lg">
+<div class="flex items-center justify-between mb-xl">
+<h3 class="font-headline-sm text-headline-sm">Reminders</h3>
+<button class="p-2 hover:bg-surface-container rounded-full" onclick="document.getElementById('calendarPanel').classList.add('translate-x-full')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-lg">
+<div class="p-md bg-surface-container-low rounded-xl">
+<p class="font-label-sm text-label-sm text-error uppercase font-bold mb-2">Today</p>
+<div class="flex gap-md">
+<div class="w-1 bg-error rounded-full"></div>
+<div>
+<p class="font-body-md text-body-md font-bold">Stanford Deadline</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Final submission due by 11:59 PM</p>
+</div>
+</div>
+</div>
+<div class="p-md bg-surface-container-low rounded-xl border-l-4 border-primary">
+<p class="font-label-sm text-label-sm text-primary uppercase font-bold mb-2">Tomorrow</p>
+<div class="flex gap-md">
+<div>
+<p class="font-body-md text-body-md font-bold">Oxford Interview Prep</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Scheduled w/ AI Advisor at 3:00 PM</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Micro-interaction: Toggle Calendar Panel for simulation
+        const toggle = document.getElementById('calendarToggle');
+        const panel = document.getElementById('calendarPanel');
+        
+        toggle.addEventListener('click', () => {
+            panel.classList.toggle('translate-x-full');
+        });
+
+        // Add some basic drag visual feedback simulation
+        const cards = document.querySelectorAll('.kanban-card');
+        cards.forEach(card => {
+            card.addEventListener('mousedown', () => {
+                card.style.opacity = '0.7';
+                card.style.cursor = 'grabbing';
+            });
+            card.addEventListener('mouseup', () => {
+                card.style.opacity = '1';
+                card.style.cursor = 'grab';
+            });
+        });
+    </script>
+</body></html>

@@ -55,8 +55,8 @@ export function DeadlinePill({
           'bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300',
         tone === 'soon' &&
           'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300',
-        tone === 'normal' && 'bg-muted text-muted-foreground',
-        tone === 'past' && 'bg-muted text-muted-foreground line-through',
+        tone === 'normal' && 'bg-surface-container-high text-on-surface-variant',
+        tone === 'past' && 'bg-surface-container-high text-on-surface-variant line-through',
         className
       )}
     >
@@ -66,7 +66,7 @@ export function DeadlinePill({
             'h-1.5 w-1.5 rounded-full',
             tone === 'urgent' && 'bg-rose-500',
             tone === 'soon' && 'bg-amber-500',
-            tone === 'normal' && 'bg-muted-foreground'
+            tone === 'normal' && 'bg-on-surface-variant'
           )}
         />
       )}

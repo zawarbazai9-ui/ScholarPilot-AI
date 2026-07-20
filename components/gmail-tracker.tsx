@@ -1,21 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-  Mail,
-  Loader2,
-  CheckCircle2,
-  AlertCircle,
-  RefreshCw,
-  Scan,
-  ExternalLink,
-  Trash2,
-} from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/lib/supabase';
 
 type GmailStatus = {
@@ -147,98 +136,97 @@ export function GmailTracker({ onScanComplete }: { onScanComplete?: () => void }
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="flex items-center gap-3 py-4">
-          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Checking Gmail status...</span>
-        </CardContent>
-      </Card>
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <div className="flex items-center gap-3 py-4">
+          <span className="material-symbols-outlined text-[16px] animate-spin text-on-surface-variant">progress_activity</span>
+          <span className="text-sm text-on-surface-variant">Checking Gmail status...</span>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card>
-      <CardContent className="py-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-                status?.connected
-                  ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400'
-                  : 'bg-muted text-muted-foreground'
-              }`}
-            >
-              <Mail className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">Gmail Auto-Tracker</p>
-              {status?.connected ? (
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Connected as <span className="font-medium">{status.email}</span>
-                </p>
-              ) : (
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Connect Gmail to auto-detect scholarship emails
-                </p>
-              )}
-            </div>
+    <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-lg p-2 ${
+              status?.connected
+                ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400'
+                : 'bg-surface-container-high text-on-surface-variant'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[20px]">mail</span>
           </div>
-
-          <div className="flex items-center gap-2">
+          <div>
+            <p className="text-sm font-medium">Gmail Auto-Tracker</p>
             {status?.connected ? (
-              <>
-                <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                  <CheckCircle2 className="mr-1 h-3 w-3" />
-                  Connected
-                </Badge>
-                <Button
-                  size="sm"
-                  onClick={handleScan}
-                  disabled={scanning}
-                >
-                  {scanning ? (
-                    <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Scan className="mr-1.5 h-3.5 w-3.5" />
-                  )}
-                  {scanning ? 'Scanning...' : 'Scan inbox'}
-                </Button>
-                <Button size="sm" variant="ghost" onClick={handleDisconnect}>
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </>
+              <p className="mt-0.5 text-xs text-on-surface-variant">
+                Connected as <span className="font-medium">{status.email}</span>
+              </p>
             ) : (
-              <Button size="sm" onClick={handleConnect}>
-                <Mail className="mr-1.5 h-3.5 w-3.5" />
-                Connect Gmail
-              </Button>
+              <p className="mt-0.5 text-xs text-on-surface-variant">
+                Connect Gmail to auto-detect scholarship emails
+              </p>
             )}
           </div>
         </div>
 
-        {/* Scan results */}
-        {scanResult && (
-          <div className="mt-4 rounded-lg border bg-muted/30 p-3 text-xs">
-            <p className="font-medium">Last scan results:</p>
-            <ul className="mt-1 space-y-0.5 text-muted-foreground">
-              <li>Checked {scanResult.scanned} emails</li>
-              {scanResult.created.length > 0 && (
-                <li className="text-emerald-600 dark:text-emerald-400">
-                  + {scanResult.created.length} new: {scanResult.created.join(', ')}
-                </li>
-              )}
-              {scanResult.updated.length > 0 && (
-                <li className="text-sky-600 dark:text-sky-400">
-                  ~ {scanResult.updated.length} updated: {scanResult.updated.join(', ')}
-                </li>
-              )}
-              {scanResult.created.length === 0 && scanResult.updated.length === 0 && (
-                <li>No new scholarship updates found</li>
-              )}
-            </ul>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        <div className="flex items-center gap-2">
+          {status?.connected ? (
+            <>
+              <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                <span className="material-symbols-outlined text-[20px] mr-1">check_circle</span>
+                Connected
+              </Badge>
+              <Button
+                size="sm"
+                onClick={handleScan}
+                disabled={scanning}
+                className="bg-primary text-on-primary rounded-xl font-bold text-xs"
+              >
+                {scanning ? (
+                  <span className="material-symbols-outlined text-[16px] animate-spin mr-1.5">progress_activity</span>
+                ) : (
+                  <span className="material-symbols-outlined text-[16px] mr-1.5">scan</span>
+                )}
+                {scanning ? 'Scanning...' : 'Scan inbox'}
+              </Button>
+              <Button size="sm" variant="ghost" onClick={handleDisconnect} className="text-xs">
+                <span className="material-symbols-outlined text-[16px]">delete</span>
+              </Button>
+            </>
+          ) : (
+            <Button size="sm" onClick={handleConnect} className="bg-primary text-on-primary rounded-xl font-bold text-xs">
+              <span className="material-symbols-outlined text-[16px] mr-1.5">mail</span>
+              Connect Gmail
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Scan results */}
+      {scanResult && (
+        <div className="mt-4 rounded-lg border bg-surface-container-high/50 p-3 text-xs">
+          <p className="font-medium">Last scan results:</p>
+          <ul className="mt-1 space-y-0.5 text-on-surface-variant">
+            <li>Checked {scanResult.scanned} emails</li>
+            {scanResult.created.length > 0 && (
+              <li className="text-emerald-600 dark:text-emerald-400">
+                + {scanResult.created.length} new: {scanResult.created.join(', ')}
+              </li>
+            )}
+            {scanResult.updated.length > 0 && (
+              <li className="text-sky-600 dark:text-sky-400">
+                ~ {scanResult.updated.length} updated: {scanResult.updated.join(', ')}
+              </li>
+            )}
+            {scanResult.created.length === 0 && scanResult.updated.length === 0 && (
+              <li>No new scholarship updates found</li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }

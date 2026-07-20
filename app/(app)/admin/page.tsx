@@ -2,18 +2,6 @@
 
 import * as React from 'react';
 import { useEffect, useState, useCallback } from 'react';
-import {
-  Loader2,
-  Plus,
-  Pencil,
-  Trash2,
-  Database,
-  Search,
-  Users,
-  UserPlus,
-  Shield,
-  Sparkles,
-} from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -102,34 +90,34 @@ export default function AdminPage() {
   const [tab, setTab] = useState<Tab>('scholarships');
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+    <div className="space-y-lg mx-auto max-w-6xl p-xl">
+      <div className="space-y-lg">
+        <h1 className="font-headline-lg text-headline-lg text-primary">
           Admin
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-body-lg text-on-surface-variant/80">
           Manage scholarships, users, and catalog data.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-lg border bg-muted/50 p-1 w-fit">
+      <div className="flex gap-1 rounded-xl bg-surface-container-high p-1 w-fit">
         {([
-          { key: 'scholarships' as Tab, label: 'Scholarships', icon: Shield },
-          { key: 'ai-finder' as Tab, label: 'AI Finder', icon: Sparkles },
-          { key: 'users' as Tab, label: 'Users', icon: Users },
+          { key: 'scholarships' as Tab, label: 'Scholarships', iconName: 'shield' },
+          { key: 'ai-finder' as Tab, label: 'AI Finder', iconName: 'auto_awesome' },
+          { key: 'users' as Tab, label: 'Users', iconName: 'group' },
         ]).map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={cn(
-              'flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors',
+              'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors',
               tab === t.key
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-surface-container-lowest text-on-surface shadow-sm'
+                : 'text-on-surface-variant hover:text-on-surface'
             )}
           >
-            <t.icon className="h-4 w-4" />
+            <span className="material-symbols-outlined text-[20px]">{t.iconName}</span>
             {t.label}
           </button>
         ))}
@@ -254,78 +242,84 @@ function ScholarshipsTab({ session }: { session: { access_token?: string } | nul
 
   return (
     <>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted-foreground">{scholarships.length} scholarship(s) total.</p>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleSeed} disabled={seeding}>
-            {seeding ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Database className="mr-2 h-4 w-4" />}
-            Seed catalog
-          </Button>
-          <Button onClick={openCreate}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add scholarship
-          </Button>
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30 space-y-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-on-surface-variant">{scholarships.length} scholarship(s) total.</p>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={handleSeed} disabled={seeding}>
+              {seeding ? (
+                <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>
+              ) : (
+                <span className="material-symbols-outlined text-[20px] mr-2">database</span>
+              )}
+              Seed catalog
+            </Button>
+            <Button onClick={openCreate}>
+              <span className="material-symbols-outlined text-[20px] mr-2">add</span>
+              Add scholarship
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div className="relative max-w-sm">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Search scholarships…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
-      </div>
+        <div className="relative max-w-sm">
+          <span className="material-symbols-outlined text-[20px] pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+          <Input placeholder="Search scholarships…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20 text-muted-foreground">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading scholarships…
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/20 py-16 text-center">
-          <Search className="h-8 w-8 text-muted-foreground" />
-          <p className="mt-3 font-medium">No scholarships found</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {scholarships.length === 0 ? 'Click "Seed catalog" to load starter data, or "Add scholarship" to create one.' : 'Try a different search term.'}
-          </p>
-        </div>
-      ) : (
-        <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden sm:table-cell">University</TableHead>
-                <TableHead className="hidden md:table-cell">Country</TableHead>
-                <TableHead className="hidden md:table-cell">Degree</TableHead>
-                <TableHead>Funding</TableHead>
-                <TableHead className="hidden sm:table-cell">Deadline</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((s) => (
-                <TableRow key={s.id}>
-                  <TableCell className="font-medium max-w-[250px] truncate">{s.title}</TableCell>
-                   <TableCell className="hidden sm:table-cell text-muted-foreground max-w-[180px] truncate">{s.university}</TableCell>
-                   <TableCell className="hidden md:table-cell"><Badge variant="outline" className="text-xs">{s.country}</Badge></TableCell>
-                   <TableCell className="hidden md:table-cell text-muted-foreground">{s.degree ?? '—'}</TableCell>
-                   <TableCell><Badge className="bg-primary/10 text-primary text-xs">{s.funding}</Badge></TableCell>
-                  <TableCell className="hidden sm:table-cell text-muted-foreground text-sm">{formatDate(s.deadline)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(s)}><Pencil className="h-3.5 w-3.5" /></Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => setDeleteTarget(s)}><Trash2 className="h-3.5 w-3.5" /></Button>
-                    </div>
-                  </TableCell>
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-on-surface-variant">
+            <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span> Loading scholarships…
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-surface-container-high/30 py-16 text-center">
+            <span className="material-symbols-outlined text-[20px] text-on-surface-variant">search</span>
+            <p className="mt-3 font-medium">No scholarships found</p>
+            <p className="mt-1 text-sm text-on-surface-variant">
+              {scholarships.length === 0 ? 'Click "Seed catalog" to load starter data, or "Add scholarship" to create one.' : 'Try a different search term.'}
+            </p>
+          </div>
+        ) : (
+          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead className="hidden sm:table-cell">University</TableHead>
+                  <TableHead className="hidden md:table-cell">Country</TableHead>
+                  <TableHead className="hidden md:table-cell">Degree</TableHead>
+                  <TableHead>Funding</TableHead>
+                  <TableHead className="hidden sm:table-cell">Deadline</TableHead>
+                  <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+              </TableHeader>
+              <TableBody>
+                {filtered.map((s) => (
+                  <TableRow key={s.id}>
+                    <TableCell className="font-medium max-w-[250px] truncate">{s.title}</TableCell>
+                    <TableCell className="hidden sm:table-cell text-on-surface-variant max-w-[180px] truncate">{s.university}</TableCell>
+                    <TableCell className="hidden md:table-cell"><Badge variant="outline" className="text-xs">{s.country}</Badge></TableCell>
+                    <TableCell className="hidden md:table-cell text-on-surface-variant">{s.degree ?? '—'}</TableCell>
+                    <TableCell><Badge className="bg-secondary-container text-on-secondary-container text-xs">{s.funding}</Badge></TableCell>
+                    <TableCell className="hidden sm:table-cell text-on-surface-variant text-sm">{formatDate(s.deadline)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(s)}><span className="material-symbols-outlined text-[20px]">edit</span></Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => setDeleteTarget(s)}><span className="material-symbols-outlined text-[20px]">delete</span></Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
 
       {/* Add / Edit Dialog */}
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="font-display text-xl">{editingId ? 'Edit scholarship' : 'Add scholarship'}</DialogTitle>
+            <DialogTitle className="font-headline-md text-headline-md text-on-surface">{editingId ? 'Edit scholarship' : 'Add scholarship'}</DialogTitle>
             <DialogDescription>{editingId ? 'Update the scholarship details below.' : 'Fill in the details to add a new scholarship to the catalog.'}</DialogDescription>
           </DialogHeader>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -366,17 +360,17 @@ function ScholarshipsTab({ session }: { session: { access_token?: string } | nul
             </div>
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="f-desc">Description *</Label>
-              <textarea id="f-desc" value={form.description} onChange={(e) => setField('description', e.target.value)} rows={3} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="Brief description of the scholarship…" />
+              <textarea id="f-desc" value={form.description} onChange={(e) => setField('description', e.target.value)} rows={3} className="flex w-full rounded-md border border-input bg-surface-container-lowest px-3 py-2 text-sm ring-offset-background placeholder:text-on-surface-variant/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="Brief description of the scholarship…" />
             </div>
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="f-reqs">Requirements</Label>
-              <textarea id="f-reqs" value={form.requirements} onChange={(e) => setField('requirements', e.target.value)} rows={3} className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="Eligibility criteria…" />
+              <textarea id="f-reqs" value={form.requirements} onChange={(e) => setField('requirements', e.target.value)} rows={3} className="flex w-full rounded-md border border-input bg-surface-container-lowest px-3 py-2 text-sm ring-offset-background placeholder:text-on-surface-variant/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="Eligibility criteria…" />
             </div>
           </div>
           <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => setFormOpen(false)}>Cancel</Button>
             <Button onClick={handleSave} disabled={saving}>
-              {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {saving && <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>}
               {editingId ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
@@ -394,8 +388,8 @@ function ScholarshipsTab({ session }: { session: { access_token?: string } | nul
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Delete
+            <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-error text-on-error hover:bg-error/90">
+              {deleting && <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>} Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -484,86 +478,88 @@ function UsersTab({ session }: { session: { access_token?: string } | null }) {
 
   return (
     <>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-muted-foreground">{users.length} user(s) total.</p>
-        <Button onClick={() => { setForm(EMPTY_USER_FORM); setCreateOpen(true); }}>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Create user
-        </Button>
-      </div>
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30 space-y-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-on-surface-variant">{users.length} user(s) total.</p>
+          <Button onClick={() => { setForm(EMPTY_USER_FORM); setCreateOpen(true); }}>
+            <span className="material-symbols-outlined text-[20px] mr-2">person_add</span>
+            Create user
+          </Button>
+        </div>
 
-      <div className="relative max-w-sm">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Search by email…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
-      </div>
+        <div className="relative max-w-sm">
+          <span className="material-symbols-outlined text-[20px] pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+          <Input placeholder="Search by email…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20 text-muted-foreground">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading users…
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/20 py-16 text-center">
-          <Users className="h-8 w-8 text-muted-foreground" />
-          <p className="mt-3 font-medium">No users found</p>
-        </div>
-      ) : (
-        <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Email</TableHead>
-                <TableHead className="hidden sm:table-cell">Name</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead className="hidden md:table-cell">Joined</TableHead>
-                <TableHead className="hidden md:table-cell">Last sign-in</TableHead>
-                <TableHead className="w-[80px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((u) => {
-                const isAdmin = adminEmails.includes((u.email ?? '').toLowerCase());
-                return (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-medium">{u.email ?? '—'}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-muted-foreground">
-                      {(u.user_metadata?.full_name as string) ?? '—'}
-                    </TableCell>
-                    <TableCell>
-                      {isAdmin ? (
-                        <Badge className="bg-primary/10 text-primary text-xs">Admin</Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-xs">User</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
-                      {new Date(u.created_at).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground text-sm">
-                      {u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleDateString() : 'Never'}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        onClick={() => setDeleteTarget(u)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+        {loading ? (
+          <div className="flex items-center justify-center py-20 text-on-surface-variant">
+            <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span> Loading users…
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-surface-container-high/30 py-16 text-center">
+            <span className="material-symbols-outlined text-[20px] text-on-surface-variant">group</span>
+            <p className="mt-3 font-medium">No users found</p>
+          </div>
+        ) : (
+          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Email</TableHead>
+                  <TableHead className="hidden sm:table-cell">Name</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="hidden md:table-cell">Joined</TableHead>
+                  <TableHead className="hidden md:table-cell">Last sign-in</TableHead>
+                  <TableHead className="w-[80px]">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((u) => {
+                  const isAdmin = adminEmails.includes((u.email ?? '').toLowerCase());
+                  return (
+                    <TableRow key={u.id}>
+                      <TableCell className="font-medium">{u.email ?? '—'}</TableCell>
+                      <TableCell className="hidden sm:table-cell text-on-surface-variant">
+                        {(u.user_metadata?.full_name as string) ?? '—'}
+                      </TableCell>
+                      <TableCell>
+                        {isAdmin ? (
+                          <Badge className="bg-secondary-container text-on-secondary-container text-xs">Admin</Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-xs">User</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-on-surface-variant text-sm">
+                        {new Date(u.created_at).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-on-surface-variant text-sm">
+                        {u.last_sign_in_at ? new Date(u.last_sign_in_at).toLocaleDateString() : 'Never'}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => setDeleteTarget(u)}
+                        >
+                          <span className="material-symbols-outlined text-[20px]">delete</span>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
 
       {/* Create User Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-display text-xl">Create user</DialogTitle>
+            <DialogTitle className="font-headline-md text-headline-md text-on-surface">Create user</DialogTitle>
             <DialogDescription>
               Create a new account. The user can sign in immediately with the credentials below.
             </DialogDescription>
@@ -585,7 +581,7 @@ function UsersTab({ session }: { session: { access_token?: string } | null }) {
           <DialogFooter className="mt-6">
             <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
             <Button onClick={handleCreate} disabled={creating}>
-              {creating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {creating && <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>}
               Create account
             </Button>
           </DialogFooter>
@@ -603,8 +599,8 @@ function UsersTab({ session }: { session: { access_token?: string } | null }) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Delete
+            <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-error text-on-error hover:bg-error/90">
+              {deleting && <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>} Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

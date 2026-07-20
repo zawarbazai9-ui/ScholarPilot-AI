@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
-import { Loader2 } from 'lucide-react';
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -21,9 +20,9 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
 
   if (loading || !checked) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-3 text-muted-foreground">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-surface-dim">
+        <div className="flex flex-col items-center gap-3 text-on-surface-variant">
+          <span className="material-symbols-outlined text-[24px] animate-spin text-primary">progress_activity</span>
           <p className="text-sm">Loading your workspace…</p>
         </div>
       </div>

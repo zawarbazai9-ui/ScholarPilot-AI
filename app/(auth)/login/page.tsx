@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Loader2, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/auth-provider';
 import { RedirectIfAuthed } from '@/components/redirect-if-authed';
@@ -12,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const { toast } = useToast();
@@ -24,7 +23,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // If user becomes authed while here, RedirectIfAuthed handles it.
   if (user) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,94 +60,102 @@ export default function LoginPage() {
   };
 
   return (
-    <RedirectIfAuthed>
-      <div className="animate-fade-up">
-        <div className="mb-8">
-          <h1 className="font-display text-2xl font-bold tracking-tight">
-            Welcome back
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to continue your scholarship journey.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <div className="relative">
-              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@university.edu"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-primary hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <div className="relative">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-9 pr-9"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          {error && (
-            <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {error}
-            </div>
-          )}
-
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {loading ? 'Signing in…' : 'Sign in'}
-          </Button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link
-            href="/register"
-            className="font-medium text-primary hover:underline"
-          >
-            Create one free
-          </Link>
+    <div className="animate-fade-up">
+      <div className="mb-8">
+        <h1 className="font-headline-md text-headline-md font-bold text-primary">
+          Welcome back
+        </h1>
+        <p className="mt-2 font-body-sm text-body-sm text-on-surface-variant">
+          Sign in to continue your scholarship journey.
         </p>
       </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="font-label-md text-label-md text-on-surface-variant">Email</Label>
+          <div className="relative">
+            <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">mail</span>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@university.edu"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="pl-10 rounded-lg border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm focus:border-secondary focus:ring-0"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="font-label-md text-label-md text-on-surface-variant">Password</Label>
+            <Link
+              href="/forgot-password"
+              className="text-xs font-label-sm text-secondary hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <div className="relative">
+            <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">lock</span>
+            <Input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="••••••••"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pl-10 pr-10 rounded-lg border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm focus:border-secondary focus:ring-0"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              <span className="material-symbols-outlined text-[18px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
+            </button>
+          </div>
+        </div>
+
+        {error && (
+          <div className="rounded-lg border border-error/30 bg-error-container/30 px-3 py-2 font-body-sm text-body-sm text-on-error-container">
+            {error}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold font-label-md text-label-md hover:bg-primary-container active:scale-[0.98] transition-all"
+          disabled={loading}
+        >
+          {loading && <span className="material-symbols-outlined text-[18px] mr-2 animate-spin">progress_activity</span>}
+          {loading ? 'Signing in…' : 'Sign in'}
+        </Button>
+      </form>
+
+      <p className="mt-6 text-center font-body-sm text-body-sm text-on-surface-variant">
+        Don&apos;t have an account?{' '}
+        <Link
+          href="/register"
+          className="font-medium text-secondary hover:underline"
+        >
+          Create one free
+        </Link>
+      </p>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <RedirectIfAuthed>
+      <Suspense>
+        <LoginForm />
+      </Suspense>
     </RedirectIfAuthed>
   );
 }

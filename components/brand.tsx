@@ -8,7 +8,7 @@ export function ScholarPilotLogo({
   return (
     <div
       className={cn(
-        'relative flex items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-primary-foreground',
+        'relative flex items-center justify-center rounded-lg bg-gradient-to-br from-primary to-tertiary text-on-primary',
         className
       )}
     >

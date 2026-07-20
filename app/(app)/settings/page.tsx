@@ -2,17 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Loader2,
-  LogOut,
-  Moon,
-  Sun,
-  Bell,
-  Shield,
-  Trash2,
-  AlertTriangle,
-  Check,
-} from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/auth-provider';
@@ -20,13 +9,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
 export default function SettingsPage() {
@@ -56,136 +38,129 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+    <div className="mx-auto max-w-3xl space-y-lg">
+      <div className="space-y-lg">
+        <h1 className="font-headline-lg text-headline-lg text-primary">
           Settings
         </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="text-body-lg text-on-surface-variant/80">
           Manage appearance, notifications, and your account.
         </p>
       </div>
 
       {/* Appearance */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Appearance</CardTitle>
-          <CardDescription>
-            Choose how ScholarPilot looks to you.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                {mounted && theme === 'dark' ? (
-                  <Moon className="h-4 w-4" />
-                ) : (
-                  <Sun className="h-4 w-4" />
-                )}
-              </div>
-              <div>
-                <Label>Dark mode</Label>
-                <p className="text-xs text-muted-foreground">
-                  Toggle between light and dark themes.
-                </p>
-              </div>
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <p className="text-headline-md font-headline-md text-on-surface mb-lg flex items-center gap-2">
+          <span className="material-symbols-outlined text-[20px]">palette</span>
+          Appearance
+        </p>
+        <p className="text-body-sm text-on-surface-variant/80 mb-lg">
+          Choose how ScholarPilot looks to you.
+        </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant p-2">
+              {mounted && theme === 'dark' ? (
+                <span className="material-symbols-outlined text-[20px]">dark_mode</span>
+              ) : (
+                <span className="material-symbols-outlined text-[20px]">light_mode</span>
+              )}
             </div>
-            <Switch
-              checked={mounted ? theme === 'dark' : false}
-              onCheckedChange={(v) => setTheme(v ? 'dark' : 'light')}
-              aria-label="Toggle dark mode"
-            />
+            <div>
+              <Label>Dark mode</Label>
+              <p className="text-xs text-on-surface-variant">
+                Toggle between light and dark themes.
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+          <Switch
+            checked={mounted ? theme === 'dark' : false}
+            onCheckedChange={(v) => setTheme(v ? 'dark' : 'light')}
+            aria-label="Toggle dark mode"
+          />
+        </div>
+      </div>
 
       {/* Notifications */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Bell className="h-4 w-4 text-primary" />
-            Notifications
-          </CardTitle>
-          <CardDescription>
-            Control how and when we contact you.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-1">
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <p className="text-headline-md font-headline-md text-on-surface mb-lg flex items-center gap-2">
+          <span className="material-symbols-outlined text-[20px]">notifications</span>
+          Notifications
+        </p>
+        <p className="text-body-sm text-on-surface-variant/80 mb-lg">
+          Control how and when we contact you.
+        </p>
+        <div className="space-y-1">
           <SettingRow
             label="Email notifications"
             description="Receive important account and product emails."
             checked={notifications}
             onChange={setNotifications}
           />
-          <Separator className="my-3" />
+          <Separator className="my-3 border-outline-variant/20" />
           <SettingRow
             label="Deadline alerts"
             description="Get reminded 7 days and 1 day before a scholarship deadline."
             checked={deadlineAlerts}
             onChange={setDeadlineAlerts}
           />
-          <Separator className="my-3" />
+          <Separator className="my-3 border-outline-variant/20" />
           <SettingRow
             label="Weekly digest"
             description="A Sunday summary of new scholarships matching your profile."
             checked={weeklyDigest}
             onChange={setWeeklyDigest}
           />
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Security */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Shield className="h-4 w-4 text-primary" />
-            Security
-          </CardTitle>
-          <CardDescription>
-            Keep your account safe and your data private.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between rounded-lg border bg-muted/20 p-4">
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <p className="text-headline-md font-headline-md text-on-surface mb-lg flex items-center gap-2">
+          <span className="material-symbols-outlined text-[20px]">shield</span>
+          Security
+        </p>
+        <p className="text-body-sm text-on-surface-variant/80 mb-lg">
+          Keep your account safe and your data private.
+        </p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between rounded-xl bg-surface-container-high/50 p-4 border border-outline-variant/20">
             <div>
               <p className="text-sm font-medium">Signed in as</p>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <p className="text-xs text-on-surface-variant">{user?.email}</p>
             </div>
-            <Button asChild variant="outline" size="sm">
+            <Button asChild variant="outline" size="sm" className="bg-surface-container-lowest border border-outline-variant/30 text-on-surface rounded-xl font-bold">
               <a href="/forgot-password">Reset password</a>
             </Button>
           </div>
-          <div className="flex items-center justify-between rounded-lg border bg-muted/20 p-4">
+          <div className="flex items-center justify-between rounded-xl bg-surface-container-high/50 p-4 border border-outline-variant/20">
             <div>
               <p className="text-sm font-medium">Data export</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-on-surface-variant">
                 Download a copy of your ScholarPilot data.
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={handleExport}>
+            <Button variant="outline" size="sm" onClick={handleExport} className="bg-surface-container-lowest border border-outline-variant/30 text-on-surface rounded-xl font-bold">
               Request export
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Account */}
-      <Card className="border-destructive/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg text-destructive">
-            <AlertTriangle className="h-4 w-4" />
-            Account
-          </CardTitle>
-          <CardDescription>
-            Sign out or close your ScholarPilot account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between rounded-lg border bg-muted/20 p-4">
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-error/10 bg-error-container/20">
+        <p className="text-headline-md font-headline-md text-error mb-lg flex items-center gap-2">
+          <span className="material-symbols-outlined text-[20px]">warning</span>
+          Account
+        </p>
+        <p className="text-body-sm text-on-surface-variant/80 mb-lg">
+          Sign out or close your ScholarPilot account.
+        </p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between rounded-xl bg-surface-container-high/50 p-4 border border-outline-variant/20">
             <div>
               <p className="text-sm font-medium">Sign out</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-on-surface-variant">
                 End your session on this device.
               </p>
             </div>
@@ -194,33 +169,34 @@ export default function SettingsPage() {
               size="sm"
               onClick={handleSignOut}
               disabled={signingOut}
+              className="bg-surface-container-lowest border border-outline-variant/30 text-on-surface rounded-xl font-bold"
             >
               {signingOut ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>
               ) : (
-                <LogOut className="mr-2 h-4 w-4" />
+                <span className="material-symbols-outlined text-[20px] mr-2">logout</span>
               )}
               Sign out
             </Button>
           </div>
-          <div className="flex items-center justify-between rounded-lg border border-destructive/20 bg-destructive/5 p-4">
+          <div className="flex items-center justify-between rounded-xl bg-error-container/10 p-4 border border-error/20">
             <div>
               <p className="text-sm font-medium">Delete account</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-on-surface-variant">
                 Permanently remove your account and all associated data.
               </p>
             </div>
             <Button variant="destructive" size="sm" disabled>
-              <Trash2 className="mr-2 h-4 w-4" />
+              <span className="material-symbols-outlined text-[20px] mr-2">delete</span>
               Delete
             </Button>
           </div>
-          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Check className="h-3 w-3 text-success" />
+          <p className="flex items-center gap-1.5 text-xs text-on-surface-variant">
+            <span className="material-symbols-outlined text-[12px] text-green-600 dark:text-green-400">check</span>
             Account deletion is disabled in this demo environment.
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
@@ -240,7 +216,7 @@ function SettingRow({
     <div className="flex items-center justify-between">
       <div>
         <Label>{label}</Label>
-        <p className="text-xs text-muted-foreground">{description}</p>
+        <p className="text-xs text-on-surface-variant">{description}</p>
       </div>
       <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
     </div>

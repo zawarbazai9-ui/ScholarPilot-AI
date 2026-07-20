@@ -1,0 +1,420 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ScholarMatch | AI Advisor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e5eeff",
+                    "primary-container": "#1a2b48",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#5a00c6",
+                    "inverse-primary": "#b6c7eb",
+                    "secondary": "#006591",
+                    "on-primary": "#ffffff",
+                    "primary": "#031632",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#380081",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-fixed-dim": "#d2bbff",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff",
+                    "primary-fixed-dim": "#b6c7eb",
+                    "surface-bright": "#f8f9ff",
+                    "on-primary-fixed": "#081b38",
+                    "background": "#f8f9ff",
+                    "on-surface-variant": "#44474d",
+                    "secondary-fixed": "#c9e6ff",
+                    "on-secondary-container": "#004666",
+                    "secondary-fixed-dim": "#89ceff",
+                    "on-background": "#0b1c30",
+                    "on-tertiary-fixed": "#25005a",
+                    "on-tertiary-container": "#a579ff",
+                    "inverse-surface": "#213145",
+                    "on-primary-container": "#8293b5",
+                    "outline-variant": "#c5c6ce",
+                    "on-primary-fixed-variant": "#374765",
+                    "on-secondary-fixed-variant": "#004c6e",
+                    "tertiary": "#1f004e",
+                    "surface-tint": "#4e5f7e",
+                    "on-secondary-fixed": "#001e2f",
+                    "on-error": "#ffffff",
+                    "surface": "#f8f9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#d7e2ff",
+                    "outline": "#75777e",
+                    "tertiary-fixed": "#eaddff",
+                    "secondary-container": "#39b8fd",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "surface-variant": "#d3e4fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "48px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "base": "8px",
+                    "lg": "24px",
+                    "xl": "40px",
+                    "gutter": "24px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-sm": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(165, 121, 255, 0.2);
+        }
+        .ai-glow {
+            box-shadow: 0 0 20px rgba(165, 121, 255, 0.15);
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden h-screen flex">
+<!-- SideNavBar (Authority: Shared Components JSON) -->
+<aside class="hidden md:flex flex-col h-screen p-md gap-sm bg-surface-container-low dark:bg-primary-container w-64 border-r border-outline-variant shrink-0">
+<div class="flex items-center gap-sm mb-lg px-xs">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed leading-tight">ScholarMatch</h1>
+<p class="text-[10px] text-on-primary-container uppercase tracking-widest font-bold">AI Admissions Copilot</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">school</span> Scholarships
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">account_balance</span> Universities
+            </a>
+<!-- Active State: AI Advisor -->
+<a class="flex items-center gap-md p-md bg-tertiary-container text-on-tertiary-container dark:bg-tertiary dark:text-on-tertiary rounded-lg font-semibold shadow-sm font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span> AI Advisor
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant dark:text-on-primary-container hover:bg-surface-container-high dark:hover:bg-primary-fixed-dim rounded-lg transition-all font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">description</span> Applications
+            </a>
+
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant flex flex-col gap-xs">
+<button class="w-full mb-md py-3 px-4 bg-primary text-on-primary rounded-xl font-bold text-label-md hover:opacity-90 transition-opacity flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[20px]">bolt</span> Upgrade to Pro
+            </button>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-container-high rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">help</span> Help Center
+            </a>
+<a class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-container-high rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">logout</span> Log Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden bg-background">
+<!-- TopNavBar (Authority: Shared Components JSON) -->
+<header class="flex justify-between items-center w-full px-margin-desktop py-4 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm sticky top-0 z-10">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed md:hidden">ScholarMatch</span>
+<div class="hidden md:flex items-center bg-surface-container px-md py-2 rounded-full w-96">
+<span class="material-symbols-outlined text-outline mr-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full" placeholder="Search resources, universities..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface-container-lowest"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A clean, professional headshot of a student in their early 20s with a bright, motivated expression, shot in a well-lit modern library environment. The image uses a soft, high-key lighting style to align with a light-mode SaaS aesthetic. The color palette is dominated by soft blues and crisp whites, creating a trustworthy and scholarly atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjCyHgIE0QKa5cZtWPIh8mtowdc5qViLQQXBSgdKBK0NYnrPqdmPww58ew9CyLgjoVhgwsrt-LU7dj69zE0JXMImFwYC28yFlBiq0fWYHfajPGzjhKwqn3QkuGy5-ggJu6kpwyv5AqHl5L5GEXQj-KIlcJi-Ej_jKQ14Tz9p3FFzXRHxKGMF-glq64z9nVMqmNgkjoaAqwcq0_5UptONBhQlfqe7XAZogLGvNzS_rfJy187BIhhsW1zgqQIy4E-__fmFYNfR-xVw">
+</div>
+</div>
+</header>
+<!-- UI Layout: Left Panel + Chat Window -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Sidebar: Documents & Prompts -->
+<section class="w-80 border-r border-outline-variant bg-surface-container-lowest flex flex-col p-lg gap-xl overflow-y-auto scrollbar-hide">
+<!-- Uploaded Documents -->
+<div>
+<div class="flex items-center justify-between mb-md">
+<h3 class="font-headline-sm text-headline-sm text-primary">Context Files</h3>
+<span class="text-xs text-on-primary-container font-bold bg-primary-container/10 px-2 py-1 rounded">3 Files</span>
+</div>
+<div class="space-y-sm">
+<!-- File 1 -->
+<div class="flex items-center p-md bg-surface-container-low border border-outline-variant rounded-xl group hover:border-secondary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-secondary mr-md">picture_as_pdf</span>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary truncate">Resume.pdf</p>
+<p class="text-[10px] text-outline">Uploaded 2h ago • 1.2MB</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">more_vert</span>
+</div>
+<!-- File 2 -->
+<div class="flex items-center p-md bg-surface-container-low border border-outline-variant rounded-xl group hover:border-secondary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-secondary mr-md">picture_as_pdf</span>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary truncate">Transcript.pdf</p>
+<p class="text-[10px] text-outline">Uploaded 2h ago • 4.5MB</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">more_vert</span>
+</div>
+<!-- File 3 -->
+<div class="flex items-center p-md bg-surface-container-low border border-outline-variant rounded-xl group hover:border-secondary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-secondary-container mr-md">description</span>
+<div class="flex-1">
+<p class="font-label-md text-label-md text-primary truncate">SOP_Draft.docx</p>
+<p class="text-[10px] text-outline">Uploaded 1h ago • 84KB</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">more_vert</span>
+</div>
+</div>
+<button class="mt-md w-full py-2 border-2 border-dashed border-outline-variant rounded-xl text-label-sm text-outline hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">add_circle</span> Upload New Context
+                    </button>
+</div>
+<!-- Quick Prompts -->
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-md">Quick Actions</h3>
+<div class="space-y-sm">
+<button class="w-full text-left p-md bg-surface-bright border border-outline-variant rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-container/10 hover:border-on-tertiary-container hover:text-on-tertiary-container transition-all flex items-center justify-between group">
+                            Am I eligible?
+                            <span class="material-symbols-outlined text-[18px] opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all">chevron_right</span>
+</button>
+<button class="w-full text-left p-md bg-surface-bright border border-outline-variant rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-container/10 hover:border-on-tertiary-container hover:text-on-tertiary-container transition-all flex items-center justify-between group">
+                            Improve my SOP
+                            <span class="material-symbols-outlined text-[18px] opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all">chevron_right</span>
+</button>
+<button class="w-full text-left p-md bg-surface-bright border border-outline-variant rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-tertiary-container/10 hover:border-on-tertiary-container hover:text-on-tertiary-container transition-all flex items-center justify-between group">
+                            Recommend scholarships
+                            <span class="material-symbols-outlined text-[18px] opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- System Status -->
+<div class="p-md bg-tertiary-container/5 rounded-2xl border border-on-tertiary-container/10 flex items-center gap-md">
+<div class="relative">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full"></span>
+</div>
+<div class="flex-1">
+<p class="text-[12px] font-bold text-on-tertiary-container">Lumina-1 Alpha</p>
+<p class="text-[10px] text-on-primary-container">Optimized for academic rigor</p>
+</div>
+</div>
+</section>
+<!-- Main Chat Panel -->
+<section class="flex-1 flex flex-col relative bg-surface-bright">
+<!-- Chat Window Scroll Area -->
+<div class="flex-1 overflow-y-auto p-xl space-y-xl scrollbar-hide" id="chat-container">
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="max-w-[70%] bg-primary text-on-primary p-md rounded-2xl rounded-tr-none shadow-sm">
+<p class="font-body-md text-body-md">Based on my uploaded transcript and resume, which STEM scholarships am I most likely to receive for my Master's applications in Europe?</p>
+</div>
+</div>
+<!-- AI Structured Response -->
+<div class="flex gap-lg">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container shrink-0 ai-glow">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex-1 space-y-lg">
+<div class="max-w-[90%] space-y-md">
+<p class="font-body-md text-body-md text-on-surface-variant">Based on your academic profile (3.8 GPA in Physics) and your internship at CERN mentioned in your <strong>Resume.pdf</strong>, I have identified three high-probability matches in the European STEM landscape.</p>
+<!-- Recommendations Cards -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-lowest border border-outline-variant rounded-2xl hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-sm">
+<span class="px-2 py-1 bg-secondary/10 text-secondary text-[10px] font-extrabold rounded uppercase tracking-wider">Top Match</span>
+<span class="text-on-tertiary-container font-bold text-label-md">94% Fit</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-xs">Erasmus+ Mundus JMD</h4>
+<p class="text-body-sm text-on-surface-variant mb-md">Fully funded program for interdisciplinary research.</p>
+<div class="flex items-center gap-sm text-[12px] text-outline">
+<span class="material-symbols-outlined text-[16px]">location_on</span> EU Wide
+                                            <span class="material-symbols-outlined text-[16px] ml-md">payments</span> €25,000/yr
+                                        </div>
+</div>
+<div class="p-md bg-surface-container-lowest border border-outline-variant rounded-2xl hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-sm">
+<span class="px-2 py-1 bg-on-tertiary-container/10 text-on-tertiary-container text-[10px] font-extrabold rounded uppercase tracking-wider">Research Merit</span>
+<span class="text-on-tertiary-container font-bold text-label-md">88% Fit</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-xs">DAAD Research Grant</h4>
+<p class="text-body-sm text-on-surface-variant mb-md">For research excellence in German institutions.</p>
+<div class="flex items-center gap-sm text-[12px] text-outline">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Germany
+                                            <span class="material-symbols-outlined text-[16px] ml-md">payments</span> €12,000/yr
+                                        </div>
+</div>
+</div>
+<!-- Match Score Analysis (Bento Card) -->
+<div class="ai-glass p-lg rounded-3xl mt-lg">
+<h4 class="font-headline-sm text-headline-sm text-primary flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-on-tertiary-container">analytics</span>
+                                        Match Score Analysis
+                                    </h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="space-y-xs">
+<p class="text-[10px] font-bold text-outline uppercase">Academic GPA</p>
+<div class="h-2 w-full bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[95%]"></div>
+</div>
+<p class="text-label-md text-primary font-bold">3.8 / 4.0 (Top 5%)</p>
+</div>
+<div class="space-y-xs">
+<p class="text-[10px] font-bold text-outline uppercase">Research Impact</p>
+<div class="h-2 w-full bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-on-tertiary-container w-[80%]"></div>
+</div>
+<p class="text-label-md text-primary font-bold">High (CERN Internship)</p>
+</div>
+<div class="space-y-xs">
+<p class="text-[10px] font-bold text-outline uppercase">SOP Alignment</p>
+<div class="h-2 w-full bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-error w-[45%]"></div>
+</div>
+<p class="text-label-md text-error font-bold">Needs Polish</p>
+</div>
+</div>
+<div class="mt-lg pt-md border-t border-on-tertiary-container/10">
+<p class="text-body-sm text-on-surface-variant italic border-l-4 border-on-tertiary-container pl-md">
+                                            "Your research experience is significantly above average, but your SOP draft lacks a clear connection to European industrial goals."
+                                        </p>
+</div>
+</div>
+<!-- Citations -->
+<div class="flex items-center gap-md text-xs text-outline mt-md">
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">link</span> Source: TopUniversities.com</span>
+<span class="flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">link</span> Source: EU Education Portal</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-xl bg-gradient-to-t from-background to-transparent pt-xl">
+<div class="max-w-4xl mx-auto ai-glass rounded-2xl shadow-xl flex items-center p-md gap-md border-2 border-on-tertiary-container/20 group focus-within:border-on-tertiary-container transition-all">
+<button class="p-sm text-outline hover:text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 text-body-md py-2 resize-none scrollbar-hide" placeholder="Ask Lumina anything about your application..." rows="1"></textarea>
+<div class="flex items-center gap-sm">
+<button class="p-sm text-on-tertiary-container hover:bg-tertiary-container/10 rounded-full transition-all">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="bg-primary text-on-primary w-12 h-12 rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<p class="text-center text-[11px] text-outline mt-md">AI can make mistakes. Verify critical dates and eligibility requirements with official university portals.</p>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for the send button and textarea auto-resize
+        const textarea = document.querySelector('textarea');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Hover effect for file list
+        document.querySelectorAll('.group.cursor-pointer').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.classList.add('ai-glow');
+            });
+            item.addEventListener('mouseleave', () => {
+                item.classList.remove('ai-glow');
+            });
+        });
+
+        // Background atmosphere: Subtle floating purple particles using JS
+        const canvasContainer = document.querySelector('main');
+        const particlesCount = 12;
+        for (let i = 0; i < particlesCount; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'fixed pointer-events-none opacity-20';
+            dot.style.width = Math.random() * 200 + 100 + 'px';
+            dot.style.height = dot.style.width;
+            dot.style.background = 'radial-gradient(circle, rgba(165,121,255,0.15) 0%, transparent 70%)';
+            dot.style.left = Math.random() * 100 + 'vw';
+            dot.style.top = Math.random() * 100 + 'vh';
+            dot.style.zIndex = '0';
+            document.body.appendChild(dot);
+            
+            // Basic animation
+            animateParticle(dot);
+        }
+
+        function animateParticle(el) {
+            let x = Math.random() * 100;
+            let y = Math.random() * 100;
+            setInterval(() => {
+                x += (Math.random() - 0.5) * 2;
+                y += (Math.random() - 0.5) * 2;
+                el.style.transform = `translate(${x}px, ${y}px)`;
+            }, 3000);
+        }
+    </script><div class="fixed pointer-events-none opacity-20" style="width: 191.262px; height: 191.262px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 19.2012vw; top: 3.61297vh; z-index: 0; transform: translate(11.304px, 96.2049px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 183.821px; height: 183.821px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 95.6235vw; top: 20.3505vh; z-index: 0; transform: translate(59.2119px, 91.8396px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 250.688px; height: 250.688px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 98.8638vw; top: 90.0845vh; z-index: 0; transform: translate(94.9261px, 81.3079px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 158.104px; height: 158.104px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 61.1376vw; top: 42.103vh; z-index: 0; transform: translate(9.74811px, 83.7222px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 227.925px; height: 227.925px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 80.1817vw; top: 2.55541vh; z-index: 0; transform: translate(57.0967px, 98.8891px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 122.132px; height: 122.132px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 41.7299vw; top: 94.925vh; z-index: 0; transform: translate(72.2427px, 88.5779px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 141.433px; height: 141.433px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 51.6172vw; top: 59.6203vh; z-index: 0; transform: translate(69.1081px, 16.4486px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 236.844px; height: 236.844px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 72.8264vw; top: 65.1113vh; z-index: 0; transform: translate(12.7362px, 85.3839px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 195.49px; height: 195.49px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 97.742vw; top: 16.5449vh; z-index: 0; transform: translate(16.1738px, 46.0424px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 291.347px; height: 291.347px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 86.2922vw; top: 84.7416vh; z-index: 0; transform: translate(99.1008px, 90.4079px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 263.779px; height: 263.779px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 23.4752vw; top: 43.1931vh; z-index: 0; transform: translate(15.2472px, 64.5582px);"></div><div class="fixed pointer-events-none opacity-20" style="width: 215.386px; height: 215.386px; background: radial-gradient(circle, rgba(165, 121, 255, 0.15) 0%, transparent 70%); left: 71.1632vw; top: 74.2104vh; z-index: 0; transform: translate(50.4033px, 54.7573px);"></div>
+
+
+</body></html>

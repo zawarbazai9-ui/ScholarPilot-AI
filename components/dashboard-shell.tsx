@@ -3,34 +3,19 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
-import {
-  LayoutDashboard,
-  GraduationCap,
-  ClipboardList,
-  Sparkles,
-  FileSearch,
-  FileText,
-  Shield,
-  ClipboardCheck,
-  User,
-  Settings,
-  LogOut,
-  Menu,
-  Bell,
-  Search,
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { useAuth } from '@/components/auth-provider';
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetTitle,
-  SheetClose,
 } from '@/components/ui/sheet';
-import { useAuth } from '@/components/auth-provider';
+import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { ScholarPilotLogo } from '@/components/brand';
+import { NotificationBell } from '@/components/notification-dropdown';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +24,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ScholarPilotLogo } from '@/components/brand';
 
 const adminEmails = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? '')
   .split(',')
@@ -50,23 +34,29 @@ function useIsAdmin(userEmail: string | undefined | null) {
   return !!userEmail && adminEmails.includes(userEmail.toLowerCase());
 }
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/scholarships', label: 'Scholarships', icon: GraduationCap },
-  { href: '/applications', label: 'Applications', icon: ClipboardList },
-  { href: '/eligibility', label: 'Eligibility Checker', icon: FileSearch },
-  { href: '/sop-review', label: 'SOP Review', icon: FileText },
-  { href: '/transcript-analyzer', label: 'Transcript Analyzer', icon: ClipboardCheck },
-  { href: '/assistant', label: 'AI Assistant', icon: Sparkles },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: string;
+}
+
+const navItems: NavItem[] = [
+  { href: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/scholarships', label: 'Scholarships', icon: 'school' },
+  { href: '/applications', label: 'Applications', icon: 'description' },
+  { href: '/eligibility', label: 'Eligibility Checker', icon: 'verified_user' },
+  { href: '/sop-review', label: 'SOP Review', icon: 'history_edu' },
+  { href: '/transcript-analyzer', label: 'Transcript Analyzer', icon: 'analytics' },
+  { href: '/assistant', label: 'AI Advisor', icon: 'auto_awesome' },
 ];
 
-const adminNavItems = [
-  { href: '/admin', label: 'Admin', icon: Shield },
+const adminNavItems: NavItem[] = [
+  { href: '/admin', label: 'Admin', icon: 'admin_panel_settings' },
 ];
 
-const secondaryNavItems = [
-  { href: '/profile', label: 'Profile', icon: User },
-  { href: '/settings', label: 'Settings', icon: Settings },
+const accountNavItems: NavItem[] = [
+  { href: '/profile', label: 'Profile', icon: 'person' },
+  { href: '/settings', label: 'Settings', icon: 'settings' },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -88,275 +78,259 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
 
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + '/');
+
   const NavLinks = ({ onNavigate }: { onNavigate?: () => void }) => {
     const isAdmin = useIsAdmin(user?.email);
     return (
-    <>
-      <nav className="flex flex-col gap-1">
-        <p className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Workspace
-        </p>
-        {navItems.map((item) => {
-          const active =
-            pathname === item.href || pathname.startsWith(item.href + '/');
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={cn(
-                'group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                active
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:bg-accent/10 hover:text-foreground'
-              )}
-            >
-              <item.icon
-                className={cn(
-                  'h-4 w-4 transition-colors',
-                  active
-                    ? 'text-primary'
-                    : 'text-muted-foreground group-hover:text-foreground'
-                )}
-              />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-      {isAdmin && (
+      <>
         <nav className="flex flex-col gap-1">
-          <p className="px-3 pb-2 pt-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Management
-          </p>
-          {adminNavItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(item.href + '/');
+          {navItems.map((item) => {
+            const active = isActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={onNavigate}
                 className={cn(
-                  'group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium',
                   active
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:bg-accent/10 hover:text-foreground'
+                    ? 'bg-tertiary-container text-on-tertiary-container font-semibold shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                 )}
               >
-                <item.icon
-                  className={cn(
-                    'h-4 w-4 transition-colors',
-                    active
-                      ? 'text-primary'
-                      : 'text-muted-foreground group-hover:text-foreground'
-                  )}
-                />
+                <span className="material-symbols-outlined text-[20px]" style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+                  {item.icon}
+                </span>
                 {item.label}
               </Link>
             );
           })}
         </nav>
-      )}
-      <nav className="flex flex-col gap-1">
-        <p className="px-3 pb-2 pt-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Account
-        </p>
-        {secondaryNavItems.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={cn(
-                'group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                active
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground hover:bg-accent/10 hover:text-foreground'
-              )}
-            >
-              <item.icon
-                className={cn(
-                  'h-4 w-4 transition-colors',
-                  active
-                    ? 'text-primary'
-                    : 'text-muted-foreground group-hover:text-foreground'
-                )}
-              />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-    </>
+        {isAdmin && (
+          <nav className="flex flex-col gap-0.5 mt-3">
+            <p className="px-2.5 pb-1 text-[12px] font-semibold uppercase tracking-wider text-on-surface-variant">
+              Management
+            </p>
+            {adminNavItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onNavigate}
+                  className={cn(
+                    'flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium',
+                    active
+                      ? 'bg-tertiary-container text-on-tertiary-container font-semibold shadow-sm'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
+                  )}
+                >
+                  <span className="material-symbols-outlined text-[20px]" style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+                    {item.icon}
+                  </span>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
+      </>
     );
   };
 
-  const UserCard = () => (
-    <div className="flex items-center gap-3 rounded-md border bg-card p-3">
-      <Avatar className="h-9 w-9">
-        <AvatarImage src={undefined} />
-        <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-          {initials}
-        </AvatarFallback>
-      </Avatar>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium">
-          {profile?.full_name ?? user?.email}
-        </p>
-        <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="flex min-h-screen bg-muted/30">
+    <div className="flex min-h-screen overflow-hidden bg-background">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r bg-background px-3 py-5 lg:flex">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-2 px-3 pb-6"
-        >
-          <ScholarPilotLogo className="h-7 w-7" />
-          <span className="font-display text-lg font-semibold tracking-tight">
-            ScholarPilot
-          </span>
-        </Link>
-        <div className="flex-1 overflow-y-auto">
-          <NavLinks />
+      <aside className="hidden md:flex flex-col h-screen fixed top-0 left-0 bg-surface-container-low w-[256px] border-r border-outline-variant/30 z-30">
+        {/* Brand */}
+        <div className="flex items-center gap-3 px-5 py-5 mb-2">
+          <ScholarPilotLogo className="w-9 h-9 shrink-0" />
+          <div>
+            <h1 className="font-headline-sm text-[20px] font-bold text-primary tracking-tight">
+              ScholarPilot
+            </h1>
+            <p className="text-[14px] text-on-surface-variant">
+              AI Admissions Copilot
+            </p>
+          </div>
         </div>
-        <div className="space-y-3 pt-3">
-          <UserCard />
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start text-muted-foreground hover:text-foreground"
+
+        {/* Main nav */}
+        <nav className="flex-1 flex flex-col gap-1 px-3">
+          <NavLinks />
+        </nav>
+
+        {/* Bottom section */}
+        <div className="px-3 pb-5 flex flex-col gap-1 pt-6 border-t border-outline-variant/30">
+          {/* Upgrade CTA */}
+          <div className="p-3 rounded-xl bg-primary text-white relative overflow-hidden mb-2">
+            <p className="text-[14px] font-bold mb-0.5">Upgrade to Pro</p>
+            <p className="text-[12px] opacity-80 mb-2">Get priority AI review for your essays.</p>
+            <button className="w-full bg-secondary-container text-on-secondary-container py-1 rounded-lg font-bold text-[12px]">
+              Upgrade
+            </button>
+          </div>
+
+          {/* Account nav */}
+          {accountNavItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium',
+                  active
+                    ? 'bg-tertiary-container text-on-tertiary-container font-semibold shadow-sm'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
+                )}
+              >
+                <span className="material-symbols-outlined text-[20px]" style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+                  {item.icon}
+                </span>
+                {item.label}
+              </Link>
+            );
+          })}
+
+          <button
             onClick={handleSignOut}
+            className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high w-full"
           >
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign out
-          </Button>
+            <span className="material-symbols-outlined text-[20px]">logout</span>
+            Log Out
+          </button>
         </div>
       </aside>
 
-      {/* Mobile sheet */}
-      <div className="flex w-full flex-col lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur-sm lg:px-8">
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:ml-[256px]">
+        {/* Mobile sheet */}
+        <div className="md:hidden">
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                aria-label="Open menu"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-72 p-4">
-              <SheetTitle className="flex items-center gap-2 px-2 pb-4 pt-1">
-                <ScholarPilotLogo className="h-7 w-7" />
-                <span className="font-display text-lg font-semibold">
-                  ScholarPilot
-                </span>
+            <SheetContent side="left" className="w-72 p-0 bg-surface-container-low">
+              <SheetTitle className="flex items-center gap-3 px-7 py-6">
+                <ScholarPilotLogo className="w-8 h-8 shrink-0" />
+                <div>
+                  <span className="text-[20px] font-bold text-primary tracking-tight block">
+                    ScholarPilot
+                  </span>
+                  <span className="text-[12px] text-on-surface-variant">
+                    AI Admissions Copilot
+                  </span>
+                </div>
               </SheetTitle>
-              <div className="flex flex-col gap-2">
+              <div className="px-4">
                 <NavLinks onNavigate={() => setOpen(false)} />
               </div>
-              <div className="mt-auto space-y-3 pt-4">
-                <UserCard />
-                <SheetClose asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-muted-foreground"
-                    onClick={handleSignOut}
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign out
-                  </Button>
-                </SheetClose>
+              <div className="absolute bottom-4 left-4 right-4">
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all text-[14px] font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high w-full"
+                >
+                  <span className="material-symbols-outlined text-[20px]">logout</span>
+                  Log Out
+                </button>
               </div>
             </SheetContent>
           </Sheet>
+        </div>
 
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 lg:hidden"
-          >
-            <ScholarPilotLogo className="h-6 w-6" />
-            <span className="font-display text-base font-semibold">
-              ScholarPilot
-            </span>
-          </Link>
+        {/* Top navigation bar */}
+        <header className="sticky top-0 z-40 bg-surface-container-lowest backdrop-blur-md shadow-sm border-b border-outline-variant/30 px-10 py-4 flex justify-between items-center w-full">
+          {/* Mobile hamburger + logo */}
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+            >
+              <span className="material-symbols-outlined text-on-surface-variant">menu</span>
+            </Button>
+            <Link href="/dashboard" className="flex items-center gap-2 md:hidden">
+              <ScholarPilotLogo className="w-7 h-7 shrink-0" />
+              <span className="text-[20px] font-bold text-primary tracking-tight">
+                ScholarPilot
+              </span>
+            </Link>
+          </div>
 
-          <div className="relative ml-2 hidden flex-1 items-center md:flex">
-            <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted-foreground" />
+          {/* Search bar */}
+          <div className="hidden md:flex items-center bg-surface-container rounded-full px-4 py-2 w-full max-w-md">
+            <span className="material-symbols-outlined text-on-surface-variant mr-3 text-[20px]">search</span>
             <input
-              placeholder="Search scholarships, applications…"
-              className="h-9 w-full max-w-md rounded-md border border-input bg-muted/40 pl-9 pr-3 text-sm outline-none transition-colors focus:border-primary/50 focus:bg-background"
-              onFocus={(e) => {
-                router.push('/scholarships');
-              }}
+              className="bg-transparent border-none focus:ring-0 text-[16px] text-on-surface w-full outline-none placeholder:text-on-surface-variant"
+              placeholder="Search scholarships, universities..."
+              onFocus={() => router.push('/scholarships')}
               readOnly
             />
           </div>
 
-          <div className="ml-auto flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
-              aria-label="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-              <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-primary" />
-            </Button>
+          {/* Right side actions */}
+          <div className="flex items-center gap-4">
+            <NotificationBell />
             <ThemeToggle />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="ml-1 rounded-full ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  aria-label="User menu"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={undefined} />
-                    <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-                      {initials}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {profile?.full_name ?? 'Student'}
-                  </span>
-                  <span className="truncate text-xs font-normal text-muted-foreground">
-                    {user?.email}
-                  </span>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile">
-                    <User className="mr-2 h-4 w-4" /> Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings">
-                    <Settings className="mr-2 h-4 w-4" /> Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" /> Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <button className="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
+              settings
+            </button>
+            <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-outline-variant/30">
+              <div className="text-right">
+                <p className="text-[14px] font-medium text-on-surface">
+                  {profile?.full_name ?? 'Student'}
+                </p>
+                <p className="text-[12px] text-on-surface-variant truncate max-w-[160px]">
+                  {user?.email}
+                </p>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-full ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-white">
+                    <Avatar className="w-10 h-10 ring-2 ring-outline-variant/50">
+                      <AvatarImage src={undefined} />
+                      <AvatarFallback className="text-[12px] font-bold text-white bg-gradient-to-br from-primary to-primary-container">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="flex flex-col">
+                    <span className="text-sm font-medium">
+                      {profile?.full_name ?? 'Student'}
+                    </span>
+                    <span className="truncate text-xs font-normal text-on-surface-variant">
+                      {user?.email}
+                    </span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">
+                      <span className="material-symbols-outlined mr-2 text-sm">person</span> Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/settings">
+                      <span className="material-symbols-outlined mr-2 text-sm">settings</span> Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <span className="material-symbols-outlined mr-2 text-sm">logout</span> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+        {/* Page content */}
+        <main className="flex-1 px-4 md:px-10 py-4 md:py-5 max-w-[1440px] mx-auto w-full">
+          {children}
+        </main>
       </div>
     </div>
   );

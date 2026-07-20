@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Loader2, Mail, Lock, User as UserIcon, Eye, EyeOff, Check } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { RedirectIfAuthed } from '@/components/redirect-if-authed';
 import { Button } from '@/components/ui/button';
@@ -83,19 +82,19 @@ export default function RegisterPage() {
     <RedirectIfAuthed>
       <div className="animate-fade-up">
         <div className="mb-8">
-          <h1 className="font-display text-2xl font-bold tracking-tight">
+          <h1 className="font-headline-md text-headline-md font-bold text-primary">
             Create your free account
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 font-body-sm text-body-sm text-on-surface-variant">
             Start discovering scholarships in minutes.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full name</Label>
+            <Label htmlFor="name" className="font-label-md text-label-md text-on-surface-variant">Full name</Label>
             <div className="relative">
-              <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">person</span>
               <Input
                 id="name"
                 type="text"
@@ -104,15 +103,15 @@ export default function RegisterPage() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="pl-9"
+                className="pl-10 rounded-lg border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm focus:border-secondary focus:ring-0"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="font-label-md text-label-md text-on-surface-variant">Email</Label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">mail</span>
               <Input
                 id="email"
                 type="email"
@@ -121,15 +120,15 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-9"
+                className="pl-10 rounded-lg border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm focus:border-secondary focus:ring-0"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="font-label-md text-label-md text-on-surface-variant">Password</Label>
             <div className="relative">
-              <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <span className="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">lock</span>
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -138,19 +137,15 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-9 pr-9"
+                className="pl-10 pr-10 rounded-lg border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm focus:border-secondary focus:ring-0"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                <span className="material-symbols-outlined text-[18px]">{showPassword ? 'visibility_off' : 'visibility'}</span>
               </button>
             </div>
             {password.length > 0 && (
@@ -160,13 +155,13 @@ export default function RegisterPage() {
                   return (
                     <li
                       key={c.label}
-                      className={`flex items-center gap-1.5 text-xs ${
-                        ok ? 'text-success' : 'text-muted-foreground'
+                      className={`flex items-center gap-1.5 font-label-sm text-label-sm ${
+                        ok ? 'text-success' : 'text-on-surface-variant'
                       }`}
                     >
-                      <Check
-                        className={`h-3 w-3 ${ok ? 'opacity-100' : 'opacity-30'}`}
-                      />
+                      <span className="material-symbols-outlined text-[14px]">
+                        {ok ? 'check_circle' : 'radio_button_unchecked'}
+                      </span>
                       {c.label}
                     </li>
                   );
@@ -176,34 +171,38 @@ export default function RegisterPage() {
           </div>
 
           {error && (
-            <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            <div className="rounded-lg border border-error/30 bg-error-container/30 px-3 py-2 font-body-sm text-body-sm text-on-error-container">
               {error}
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button
+            type="submit"
+            className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold font-label-md text-label-md hover:bg-primary-container active:scale-[0.98] transition-all"
+            disabled={loading}
+          >
+            {loading && <span className="material-symbols-outlined text-[18px] mr-2 animate-spin">progress_activity</span>}
             {loading ? 'Creating account…' : 'Create free account'}
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
+        <p className="mt-6 text-center font-body-sm text-body-sm text-on-surface-variant">
           By creating an account, you agree to our{' '}
-          <Link href="/" className="underline hover:text-foreground">
+          <Link href="/" className="underline hover:text-primary">
             Terms
           </Link>{' '}
           and{' '}
-          <Link href="/" className="underline hover:text-foreground">
+          <Link href="/" className="underline hover:text-primary">
             Privacy Policy
           </Link>
           .
         </p>
 
-        <p className="mt-4 text-center text-sm text-muted-foreground">
+        <p className="mt-4 text-center font-body-sm text-body-sm text-on-surface-variant">
           Already have an account?{' '}
           <Link
             href="/login"
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-secondary hover:underline"
           >
             Sign in
           </Link>

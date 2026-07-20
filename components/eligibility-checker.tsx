@@ -1,26 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import {
-  Sparkles,
-  ChevronDown,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Lightbulb,
-  ArrowRight,
-  Loader2,
-  FileSearch,
-  ShieldAlert,
-  Trophy,
-  BarChart3,
-  RotateCcw,
-  ExternalLink,
-} from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -133,25 +116,23 @@ export function EligibilityChecker() {
   return (
     <div className="space-y-6">
       {/* ── Selector card ───────────────────────────────── */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <FileSearch className="h-5 w-5" />
-            </div>
-            <div>
-              <CardTitle className="text-lg">AI Eligibility Checker</CardTitle>
-              <CardDescription>
-                Select a scholarship and get an AI-powered analysis of your fit.
-              </CardDescription>
-            </div>
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <div className="flex items-center gap-3 mb-lg">
+          <div className="bg-secondary-container p-2 rounded-lg">
+            <span className="material-symbols-outlined text-[20px] text-on-secondary-container">manage_search</span>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          <div>
+            <p className="text-headline-sm font-headline-sm text-on-surface">AI Eligibility Checker</p>
+            <p className="text-sm text-on-surface-variant">
+              Select a scholarship and get an AI-powered analysis of your fit.
+            </p>
+          </div>
+        </div>
+        <div className="space-y-4">
           {/* Profile warning */}
           {!loading && !hasProfile && (
             <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/20 dark:bg-amber-500/5">
-              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <span className="material-symbols-outlined text-[20px] mt-0.5 shrink-0 text-amber-600 dark:text-amber-400">shield</span>
               <div>
                 <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
                   Incomplete profile
@@ -169,7 +150,7 @@ export function EligibilityChecker() {
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div className="flex-1">
-              <label className="mb-1.5 block text-sm font-medium">
+              <label className="mb-1.5 block text-sm font-medium text-on-surface">
                 Choose a scholarship
               </label>
               {loading ? (
@@ -193,17 +174,18 @@ export function EligibilityChecker() {
               <Button
                 onClick={handleCheck}
                 disabled={!selectedId || checking}
+                className="bg-primary text-on-primary rounded-xl font-bold"
               >
                 {checking ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span className="material-symbols-outlined text-[20px] mr-2 animate-spin">progress_activity</span>
                 ) : (
-                  <Sparkles className="mr-2 h-4 w-4" />
+                  <span className="material-symbols-outlined text-[20px] mr-2">auto_awesome</span>
                 )}
                 {checking ? 'Analyzing...' : 'Check eligibility'}
               </Button>
               {result && (
-                <Button variant="outline" onClick={handleReset}>
-                  <RotateCcw className="mr-2 h-4 w-4" />
+                <Button variant="outline" onClick={handleReset} className="bg-surface-container-lowest border border-outline-variant/30 text-on-surface rounded-xl font-bold">
+                  <span className="material-symbols-outlined text-[20px] mr-2">refresh</span>
                   Reset
                 </Button>
               )}
@@ -214,22 +196,22 @@ export function EligibilityChecker() {
           {selectedScholarship && !checking && !result && (
             <SelectedPreview scholarship={selectedScholarship} />
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* ── Loading skeleton ─────────────────────────────── */}
       {checking && <ResultSkeleton />}
 
       {/* ── Error ───────────────────────────────────────── */}
       {error && (
-        <Card className="border-destructive/30 bg-destructive/5">
-          <CardContent className="flex items-start gap-3 py-4">
-            <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+        <div className="bg-error-container/20 border border-error/10 rounded-2xl p-xl shadow-sm">
+          <div className="flex items-start gap-3">
+            <span className="material-symbols-outlined text-[20px] mt-0.5 shrink-0 text-error">cancel</span>
             <div>
-              <p className="text-sm font-medium text-destructive">
+              <p className="text-sm font-medium text-error">
                 Eligibility check failed
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">{error}</p>
+              <p className="mt-1 text-xs text-on-surface-variant">{error}</p>
               <Button
                 variant="ghost"
                 size="sm"
@@ -239,8 +221,8 @@ export function EligibilityChecker() {
                 Try again
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* ── Results ─────────────────────────────────────── */}
@@ -261,23 +243,23 @@ export function EligibilityChecker() {
 
           {/* Official link */}
           {selectedScholarship?.official_link && (
-            <Card>
-              <CardContent className="flex items-center justify-between py-4">
-                <p className="text-sm text-muted-foreground">
+            <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-on-surface-variant">
                   Ready to apply?
                 </p>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="bg-primary text-on-primary rounded-xl font-bold">
                   <a
                     href={selectedScholarship.official_link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     Visit official page
-                    <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                    <span className="material-symbols-outlined text-[18px] ml-1.5">open_in_new</span>
                   </a>
                 </Button>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       )}
@@ -289,11 +271,11 @@ export function EligibilityChecker() {
 
 function SelectedPreview({ scholarship }: { scholarship: Scholarship }) {
   return (
-    <div className="rounded-lg border bg-muted/20 p-4">
+    <div className="rounded-lg border bg-surface-container-lowest p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="text-sm font-semibold">{scholarship.title}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
+          <p className="text-sm font-semibold text-on-surface">{scholarship.title}</p>
+          <p className="mt-0.5 text-xs text-on-surface-variant">
             {scholarship.university} · {scholarship.country}
           </p>
         </div>
@@ -308,11 +290,11 @@ function SelectedPreview({ scholarship }: { scholarship: Scholarship }) {
           </Badge>
         </div>
       </div>
-      <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
+      <p className="mt-2 line-clamp-2 text-xs text-on-surface-variant">
         {scholarship.description}
       </p>
       {scholarship.requirements && (
-        <p className="mt-2 line-clamp-2 text-xs text-muted-foreground italic">
+        <p className="mt-2 line-clamp-2 text-xs text-on-surface-variant italic">
           Requirements: {scholarship.requirements}
         </p>
       )}
@@ -331,12 +313,12 @@ function ScoreHeader({
   const offset = circumference - (result.eligibilityScore / 100) * circumference;
 
   return (
-    <Card className="relative overflow-hidden">
+    <div className="relative overflow-hidden bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
       <div
         aria-hidden
         className={`pointer-events-none absolute inset-0 opacity-[0.03] ${scoreBg(result.eligibilityScore)}`}
       />
-      <CardContent className="relative flex flex-col items-center gap-6 py-8 sm:flex-row">
+      <div className="relative flex flex-col items-center gap-6 py-8 sm:flex-row">
         {/* Score ring */}
         <div className="relative flex h-32 w-32 shrink-0 items-center justify-center">
           <svg className="h-full w-full -rotate-90" viewBox="0 0 120 120">
@@ -347,7 +329,7 @@ function ScoreHeader({
               fill="none"
               stroke="currentColor"
               strokeWidth="8"
-              className="text-muted/40"
+              className="text-outline-variant/40"
             />
             <circle
               cx="60"
@@ -365,10 +347,10 @@ function ScoreHeader({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`font-display text-3xl font-bold ${scoreColor(result.eligibilityScore)}`}>
+            <span className={`font-headline-md text-3xl font-bold ${scoreColor(result.eligibilityScore)}`}>
               {result.eligibilityScore}
             </span>
-            <span className="text-[10px] text-muted-foreground">/100</span>
+            <span className="text-[10px] text-on-surface-variant">/100</span>
           </div>
         </div>
 
@@ -377,42 +359,40 @@ function ScoreHeader({
             {scoreLabel(result.eligibilityScore)}
           </Badge>
           {scholarship && (
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm text-on-surface-variant">
               Assessment for{' '}
-              <span className="font-medium text-foreground">
+              <span className="font-medium text-on-surface">
                 {scholarship.title}
               </span>{' '}
               at {scholarship.university}
             </p>
           )}
           {result.overallSummary && (
-            <p className="mt-3 text-sm leading-relaxed">
+            <p className="mt-3 text-sm leading-relaxed text-on-surface">
               {result.overallSummary}
             </p>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function StrengthsCard({ strengths }: { strengths: string[] }) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-500/15">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <CardTitle className="text-base">Strengths</CardTitle>
-          <Badge variant="secondary" className="ml-auto text-xs">
-            {strengths.length}
-          </Badge>
+    <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+      <div className="flex items-center gap-2 pb-3">
+        <div className="bg-secondary-container p-2 rounded-lg">
+          <span className="material-symbols-outlined text-[20px] text-on-secondary-container">check_circle</span>
         </div>
-      </CardHeader>
-      <CardContent>
+        <p className="text-headline-sm font-headline-sm text-on-surface">Strengths</p>
+        <Badge variant="secondary" className="ml-auto text-xs">
+          {strengths.length}
+        </Badge>
+      </div>
+      <div>
         {strengths.length === 0 ? (
-          <p className="py-4 text-center text-xs text-muted-foreground">
+          <p className="py-4 text-center text-xs text-on-surface-variant">
             No strengths identified.
           </p>
         ) : (
@@ -422,33 +402,31 @@ function StrengthsCard({ strengths }: { strengths: string[] }) {
                 <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
                   {i + 1}
                 </span>
-                <span className="text-sm leading-relaxed">{s}</span>
+                <span className="text-sm leading-relaxed text-on-surface">{s}</span>
               </li>
             ))}
           </ul>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function WeaknessesCard({ weaknesses }: { weaknesses: string[] }) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-100 dark:bg-red-500/15">
-            <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-          </div>
-          <CardTitle className="text-base">Weaknesses</CardTitle>
-          <Badge variant="secondary" className="ml-auto text-xs">
-            {weaknesses.length}
-          </Badge>
+    <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+      <div className="flex items-center gap-2 pb-3">
+        <div className="bg-secondary-container p-2 rounded-lg">
+          <span className="material-symbols-outlined text-[20px] text-on-secondary-container">cancel</span>
         </div>
-      </CardHeader>
-      <CardContent>
+        <p className="text-headline-sm font-headline-sm text-on-surface">Weaknesses</p>
+        <Badge variant="secondary" className="ml-auto text-xs">
+          {weaknesses.length}
+        </Badge>
+      </div>
+      <div>
         {weaknesses.length === 0 ? (
-          <p className="py-4 text-center text-xs text-muted-foreground">
+          <p className="py-4 text-center text-xs text-on-surface-variant">
             No weaknesses identified.
           </p>
         ) : (
@@ -458,33 +436,31 @@ function WeaknessesCard({ weaknesses }: { weaknesses: string[] }) {
                 <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-[10px] font-bold text-red-700 dark:bg-red-500/15 dark:text-red-400">
                   {i + 1}
                 </span>
-                <span className="text-sm leading-relaxed">{s}</span>
+                <span className="text-sm leading-relaxed text-on-surface">{s}</span>
               </li>
             ))}
           </ul>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function MissingCard({ items }: { items: string[] }) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-500/15">
-            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-          </div>
-          <CardTitle className="text-base">Missing requirements</CardTitle>
-          <Badge variant="secondary" className="ml-auto text-xs">
-            {items.length}
-          </Badge>
+    <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+      <div className="flex items-center gap-2 pb-3">
+        <div className="bg-secondary-container p-2 rounded-lg">
+          <span className="material-symbols-outlined text-[20px] text-on-secondary-container">warning</span>
         </div>
-      </CardHeader>
-      <CardContent>
+        <p className="text-headline-sm font-headline-sm text-on-surface">Missing requirements</p>
+        <Badge variant="secondary" className="ml-auto text-xs">
+          {items.length}
+        </Badge>
+      </div>
+      <div>
         {items.length === 0 ? (
-          <p className="py-4 text-center text-xs text-muted-foreground">
+          <p className="py-4 text-center text-xs text-on-surface-variant">
             No missing requirements detected.
           </p>
         ) : (
@@ -494,33 +470,31 @@ function MissingCard({ items }: { items: string[] }) {
                 <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-[10px] font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-400">
                   !
                 </span>
-                <span className="text-sm leading-relaxed">{s}</span>
+                <span className="text-sm leading-relaxed text-on-surface">{s}</span>
               </li>
             ))}
           </ul>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function RecommendationsCard({ items }: { items: string[] }) {
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-500/15">
-            <Lightbulb className="h-4 w-4 text-violet-600 dark:text-violet-400" />
-          </div>
-          <CardTitle className="text-base">Recommendations</CardTitle>
-          <Badge variant="secondary" className="ml-auto text-xs">
-            {items.length}
-          </Badge>
+    <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+      <div className="flex items-center gap-2 pb-3">
+        <div className="bg-secondary-container p-2 rounded-lg">
+          <span className="material-symbols-outlined text-[20px] text-on-secondary-container">lightbulb</span>
         </div>
-      </CardHeader>
-      <CardContent>
+        <p className="text-headline-sm font-headline-sm text-on-surface">Recommendations</p>
+        <Badge variant="secondary" className="ml-auto text-xs">
+          {items.length}
+        </Badge>
+      </div>
+      <div>
         {items.length === 0 ? (
-          <p className="py-4 text-center text-xs text-muted-foreground">
+          <p className="py-4 text-center text-xs text-on-surface-variant">
             No recommendations at this time.
           </p>
         ) : (
@@ -528,49 +502,47 @@ function RecommendationsCard({ items }: { items: string[] }) {
             {items.map((s, i) => (
               <li key={i} className="flex items-start gap-2.5">
                 <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-100 text-[10px] font-bold text-violet-700 dark:bg-violet-500/15 dark:text-violet-400">
-                  <Lightbulb className="h-3 w-3" />
+                  <span className="material-symbols-outlined text-[14px]">lightbulb</span>
                 </span>
-                <span className="text-sm leading-relaxed">{s}</span>
+                <span className="text-sm leading-relaxed text-on-surface">{s}</span>
               </li>
             ))}
           </ul>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
 function ResultSkeleton() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <Card>
-        <CardContent className="flex flex-col items-center gap-6 py-8 sm:flex-row">
+      <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+        <div className="flex flex-col items-center gap-6 py-8 sm:flex-row">
           <Skeleton className="h-32 w-32 shrink-0 rounded-full" />
           <div className="flex-1 space-y-3">
             <Skeleton className="h-6 w-28 rounded-full" />
             <Skeleton className="h-4 w-64" />
             <Skeleton className="h-4 w-full max-w-md" />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
       <div className="grid gap-6 lg:grid-cols-2">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i}>
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-8 w-8 rounded-lg" />
-                <Skeleton className="h-5 w-32" />
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
+          <div key={i} className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30">
+            <div className="flex items-center gap-2 pb-3">
+              <Skeleton className="h-8 w-8 rounded-lg" />
+              <Skeleton className="h-5 w-32" />
+            </div>
+            <div className="space-y-3">
               {[1, 2, 3].map((j) => (
                 <div key={j} className="flex items-start gap-2.5">
                   <Skeleton className="mt-1 h-5 w-5 shrink-0 rounded-full" />
                   <Skeleton className="h-4 flex-1" />
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
     </div>
