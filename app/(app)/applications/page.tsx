@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -556,18 +555,63 @@ function ApplicationEditor({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label className="text-label-md text-on-surface-variant">Progress</Label>
-            <span className="text-body-sm text-on-surface-variant">{progress}%</span>
+            <span className="text-body-sm font-medium text-on-surface">{progress}%</span>
           </div>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={5}
-            value={progress}
-            onChange={(e) => setProgress(Number(e.target.value))}
-            className="w-full accent-primary"
-          />
-          <Progress value={progress} className="h-1.5" />
+          <div className="relative pt-1 pb-2">
+            <div className="h-2 bg-surface-container-high rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-150 ease-out"
+                style={{
+                  width: `${progress}%`,
+                  background: progress >= 100
+                    ? 'linear-gradient(90deg, var(--color-success), var(--color-secondary))'
+                    : progress >= 50
+                    ? 'linear-gradient(90deg, var(--color-primary), var(--color-tertiary))'
+                    : 'linear-gradient(90deg, var(--color-primary-container), var(--color-primary))',
+                }}
+              />
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={progress}
+              onChange={(e) => setProgress(Number(e.target.value))}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <div
+              className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary border-2 border-surface-container-lowest shadow-md pointer-events-none transition-all duration-150 ease-out"
+              style={{ left: `calc(${progress}% - 8px)` }}
+            />
+          </div>
+          <div className="flex justify-between px-0.5">
+            {[
+              { value: 0, label: 'Start' },
+              { value: 15, label: 'Research' },
+              { value: 50, label: 'Draft' },
+              { value: 85, label: 'Submit' },
+              { value: 100, label: 'Done' },
+            ].map((step) => (
+              <button
+                key={step.value}
+                type="button"
+                onClick={() => {
+                  setProgress(step.value);
+                }}
+                className={`text-center transition-colors ${
+                  progress >= step.value
+                    ? 'text-primary font-medium'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full mx-auto mb-1 transition-colors ${
+                  progress >= step.value ? 'bg-primary' : 'bg-outline-variant'
+                }`} />
+                <span className="text-[10px] leading-none">{step.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-2">

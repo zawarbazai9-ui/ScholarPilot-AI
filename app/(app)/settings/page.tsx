@@ -10,6 +10,16 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
@@ -21,6 +31,8 @@ export default function SettingsPage() {
   const [deadlineAlerts, setDeadlineAlerts] = useState(true);
   const [weeklyDigest, setWeeklyDigest] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -35,6 +47,33 @@ export default function SettingsPage() {
       title: 'Export queued',
       description: 'Your data export will be emailed to you shortly.',
     });
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
+
+      const res = await fetch('/api/account', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (!res.ok) throw new Error((await res.json()).error ?? 'Failed to delete account');
+
+      toast({ title: 'Account deleted' });
+      await signOut();
+      router.push('/login');
+    } catch (err) {
+      toast({
+        title: 'Delete failed',
+        description: err instanceof Error ? err.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteOpen(false);
+    }
   };
 
   return (
@@ -186,17 +225,36 @@ export default function SettingsPage() {
                 Permanently remove your account and all associated data.
               </p>
             </div>
-            <Button variant="destructive" size="sm" disabled>
-              <span className="material-symbols-outlined text-[20px] mr-2">delete</span>
+            <Button variant="destructive" size="sm" onClick={() => setDeleteOpen(true)} disabled={deleting}>
+              {deleting ? (
+                <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>
+              ) : (
+                <span className="material-symbols-outlined text-[20px] mr-2">delete</span>
+              )}
               Delete
             </Button>
           </div>
-          <p className="flex items-center gap-1.5 text-xs text-on-surface-variant">
-            <span className="material-symbols-outlined text-[12px] text-green-600 dark:text-green-400">check</span>
-            Account deletion is disabled in this demo environment.
-          </p>
         </div>
       </div>
+
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete your account and all associated data.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteAccount} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {deleting && <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>}
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

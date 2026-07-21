@@ -16,7 +16,6 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-8 font-label-md text-label-md">
             <a className="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#features">Features</a>
             <a className="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#universities">Universities</a>
-            <a className="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#pricing">Pricing</a>
           </div>
           <div className="flex items-center gap-4">
             <Link className="hidden sm:block font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="/login">Login</Link>
@@ -184,7 +183,6 @@ export default function LandingPage() {
               <li><Link className="text-on-surface-variant hover:text-secondary transition-colors" href="#features">Features</Link></li>
               <li><Link className="text-on-surface-variant hover:text-secondary transition-colors" href="/scholarships">Scholarship Feed</Link></li>
               <li><Link className="text-on-surface-variant hover:text-secondary transition-colors" href="/assistant">Lumina AI</Link></li>
-              <li><Link className="text-on-surface-variant hover:text-secondary transition-colors" href="#pricing">Pricing</Link></li>
             </ul>
           </div>
           <div>

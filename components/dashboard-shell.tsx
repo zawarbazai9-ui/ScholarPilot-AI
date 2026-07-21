@@ -164,37 +164,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
         {/* Bottom section */}
         <div className="px-3 pb-5 flex flex-col gap-1 pt-6 border-t border-outline-variant/30">
-          {/* Upgrade CTA */}
-          <div className="p-3 rounded-xl bg-primary text-white relative overflow-hidden mb-2">
-            <p className="text-[14px] font-bold mb-0.5">Upgrade to Pro</p>
-            <p className="text-[12px] opacity-80 mb-2">Get priority AI review for your essays.</p>
-            <button className="w-full bg-secondary-container text-on-secondary-container py-1 rounded-lg font-bold text-[12px]">
-              Upgrade
-            </button>
-          </div>
-
-          {/* Account nav */}
-          {accountNavItems.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium',
-                  active
-                    ? 'bg-tertiary-container text-on-tertiary-container font-semibold shadow-sm'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
-                )}
-              >
-                <span className="material-symbols-outlined text-[20px]" style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}>
-                  {item.icon}
-                </span>
-                {item.label}
-              </Link>
-            );
-          })}
-
           <button
             onClick={handleSignOut}
             className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high w-full"
@@ -300,9 +269,6 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-4">
             <NotificationBell />
             <ThemeToggle />
-            <button className="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors">
-              settings
-            </button>
             <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-outline-variant/30">
               <div className="text-right">
                 <p className="text-[14px] font-medium text-on-surface">
