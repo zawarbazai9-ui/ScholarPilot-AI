@@ -224,6 +224,32 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </SheetTitle>
               <div className="px-4">
                 <NavLinks onNavigate={() => setOpen(false)} />
+                <div className="flex flex-col gap-1 mt-4 border-t border-outline-variant/30 pt-3">
+                  <p className="px-2.5 pb-1 text-[12px] font-semibold uppercase tracking-wider text-on-surface-variant">
+                    Account
+                  </p>
+                  {accountNavItems.map((item) => {
+                    const active = isActive(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          'flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all text-[14px] font-medium',
+                          active
+                            ? 'bg-tertiary-container text-on-tertiary-container font-semibold shadow-sm'
+                            : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
+                        )}
+                      >
+                        <span className="material-symbols-outlined text-[20px]">
+                          {item.icon}
+                        </span>
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
               <div className="absolute bottom-4 left-4 right-4">
                 <button
