@@ -502,7 +502,7 @@ function UsersTab({ session }: { session: { access_token?: string } | null }) {
             <p className="mt-3 font-medium">No users found</p>
           </div>
         ) : (
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
+          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
