@@ -245,7 +245,7 @@ function ScholarshipsTab({ session }: { session: { access_token?: string } | nul
       <div className="bg-surface-container-lowest p-xl rounded-2xl shadow-sm border border-outline-variant/30 space-y-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-on-surface-variant">{scholarships.length} scholarship(s) total.</p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button variant="outline" onClick={handleSeed} disabled={seeding}>
               {seeding ? (
                 <span className="material-symbols-outlined text-[20px] animate-spin mr-2">progress_activity</span>
@@ -279,7 +279,7 @@ function ScholarshipsTab({ session }: { session: { access_token?: string } | nul
             </p>
           </div>
         ) : (
-          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
+          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
