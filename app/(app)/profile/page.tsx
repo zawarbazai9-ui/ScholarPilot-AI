@@ -23,7 +23,7 @@ import { updateProfile } from '@/lib/db';
 // ── PDF text extraction ─────────────────────────────────────
 
 async function extractPdfText(file: File): Promise<string> {
-  const pdfjsLib = await import('pdfjs-dist');
+  const pdfjsLib = await import('pdfjs-dist') as any;
   pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -31,7 +31,7 @@ async function extractPdfText(file: File): Promise<string> {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    pages.push(content.items.map((item: { str: string }) => item.str).join(' '));
+    pages.push(content.items.map((item: any) => item.str ?? '').join(' '));
   }
   return pages.join('\n\n');
 }
