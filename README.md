@@ -8,7 +8,7 @@ ScholarPilot solves a real problem: thousands of students miss scholarship deadl
 
 ## Live Demo
 
-**[https://scholarpilot.ai](https://scholarpilot.ai)**
+**[https://scholar-pilot-ai-vne4-gamma.vercel.app/](https://scholar-pilot-ai-vne4-gamma.vercel.app/)**
 
 ---
 
@@ -185,6 +185,10 @@ Rules:
 ![Scholarships](screenshots/scholarships.png)
 *Browse, search, and filter 65+ scholarships with AI eligibility scores.*
 
+### Eligibility Tracker
+![Scholarships](screenshots/eligibility-tracker.png)
+*Compares your profile against scholarship and tracks your chances of achieving it.*
+
 ### AI Chat Assistant
 ![AI Assistant](screenshots/assistant.png)
 *Context-aware chatbot with access to your profile, saved scholarships, and application data.*
@@ -214,7 +218,7 @@ Rules:
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/your-username/scholarpilot.git
-cd scholorpilot
+cd scholarpilot
 ```
 
 ### 2. Install dependencies
