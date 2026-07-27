@@ -169,7 +169,7 @@ Rules:
 | **Forms** | React Hook Form + Zod validation |
 | **PDF Parsing** | pdfjs-dist (client-side text extraction) |
 | **Charts** | Recharts |
-| **Hosting** | Netlify (via `@netlify/plugin-nextjs`) |
+| **Hosting** | Vercel |
 | **Fonts** | Inter (body) + Plus Jakarta Sans (headings) |
 | **Icons** | Lucide React |
 
@@ -217,7 +217,7 @@ Rules:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/scholarpilot.git
+git clone https://github.com/zawarbazai9-ui/ScholarPilot-AI
 cd scholarpilot
 ```
 
