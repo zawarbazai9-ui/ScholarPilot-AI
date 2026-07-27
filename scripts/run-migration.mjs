@@ -1,8 +1,13 @@
 import { readFileSync } from 'fs';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://hwzsohenfaiehxebstwx.supabase.co';
-const serviceKey = 'REDACTED_SERVICE_ROLE_KEY';
+const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !serviceKey) {
+  console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables');
+  process.exit(1);
+}
 
 const sql = readFileSync('supabase/migrations/20260720100000_create_notifications.sql', 'utf8');
 
