@@ -1,10 +1,6 @@
+require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
-
-// Simulate client-side anon key behavior
-const s = createClient(
-  'https://hwzsohenfaiehxebstwx.supabase.co',
-  'REDACTED_ANON_KEY'
-);
+const s = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 (async () => {
   // Sign in as the user to test

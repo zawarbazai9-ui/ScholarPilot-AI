@@ -1,8 +1,6 @@
+require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
-const s = createClient(
-  'https://hwzsohenfaiehxebstwx.supabase.co',
-  'REDACTED_SERVICE_ROLE_KEY'
-);
+const s = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 async function sql(query) {
   const { data, error } = await s.rpc('exec_sql', { query });

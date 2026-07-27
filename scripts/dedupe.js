@@ -1,7 +1,6 @@
+require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
-const url = 'https://hwzsohenfaiehxebstwx.supabase.co';
-const key = 'REDACTED_SERVICE_ROLE_KEY';
-const supabase = createClient(url, key);
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 async function dedupe() {
   const { data } = await supabase.from('scholarships').select('id, title').order('created_at', { ascending: true });

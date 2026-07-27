@@ -1,7 +1,6 @@
+require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
-const url = 'https://hwzsohenfaiehxebstwx.supabase.co';
-const key = 'REDACTED_SERVICE_ROLE_KEY';
-const supabase = createClient(url, key);
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 const fixes = {
   'Harry S. Truman Scholarship': { university: 'Truman Scholarship Foundation', funding: '$30,000', deadline: '2026-02-03', description: 'A prestigious merit-based award for college juniors committed to careers in public service. Supports graduate or professional school expenses.', requirements: 'US citizen; college junior; demonstrated commitment to public service; record of leadership and service.', official_link: 'https://www.truman.gov/apply/applying/2026-announcements' },
