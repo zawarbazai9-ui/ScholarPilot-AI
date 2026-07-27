@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/components/auth-provider';
+import Markdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 import {
   listContextFiles,
@@ -474,7 +475,27 @@ function MessageBubble({ msg }: { msg: Msg }) {
             : 'rounded-tl-none bg-surface-container-low border border-outline-variant text-on-surface'
         )}
       >
-        <p className="whitespace-pre-wrap">{msg.content}</p>
+        {isUser ? (
+          <p className="whitespace-pre-wrap">{msg.content}</p>
+        ) : (
+          <Markdown
+            components={{
+              p: ({ children }) => <p className="my-1 whitespace-pre-wrap">{children}</p>,
+              strong: ({ children }) => <strong className="font-semibold text-on-surface">{children}</strong>,
+              em: ({ children }) => <em className="italic">{children}</em>,
+              ul: ({ children }) => <ul className="list-disc pl-5 my-1">{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-5 my-1">{children}</ol>,
+              li: ({ children }) => <li className="my-0.5">{children}</li>,
+              h1: ({ children }) => <h1 className="text-lg font-bold my-2">{children}</h1>,
+              h2: ({ children }) => <h2 className="text-base font-bold my-2">{children}</h2>,
+              h3: ({ children }) => <h3 className="text-sm font-bold my-1">{children}</h3>,
+              code: ({ children }) => <code className="rounded bg-surface-container-high px-1.5 py-0.5 text-sm">{children}</code>,
+              a: ({ href, children }) => <a href={href} className="text-primary underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+            }}
+          >
+            {msg.content}
+          </Markdown>
+        )}
       </div>
     </div>
   );
