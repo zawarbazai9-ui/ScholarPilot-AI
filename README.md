@@ -2,7 +2,7 @@
 
 **AI-powered scholarship discovery, application tracking, and academic career coaching — all in one platform.**
 
-ScholarPilot solves a real problem: thousands of students miss scholarship deadlines, submit weak applications, and navigate the complex scholarship landscape alone. The platform combines a comprehensive scholarship database with AI-powered tools that analyze transcripts, review essays, check eligibility, and even auto-track applications from Gmail — giving students a unfair advantage in securing funding for their education.
+ScholarPilot solves a real problem: thousands of students miss scholarship deadlines, submit weak applications, and navigate the complex scholarship landscape alone. The platform combines a comprehensive scholarship database with AI-powered tools that analyze transcripts, review essays, check eligibility, and even auto-track applications from Gmail — giving students a competitive advantage in securing funding for their education.
 
 ---
 
